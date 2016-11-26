@@ -1,0 +1,8 @@
+{
+"name": "adventure",
+"description": "Text based adventure",
+"version": "1.0.0",
+"license": "MIT",
+"repository" :
+  { "type" : "git", "url" : "https://github.com/jim-davis/adventure-js"}
+}
