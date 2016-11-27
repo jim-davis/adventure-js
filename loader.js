@@ -1,17 +1,28 @@
-const world = require ("./world.js");
+const game = require ("./game.js");
+const player = require ("./player.js");
+const room = require ("./room.js");
+const arc = require("./arc.js");
+const noun = require("./noun.js");
+const c = require("./categories.js");
 
-const Game = world.Game;
-const Player = world.Player;
-const Room = world.Room;
+const Game = game.Game;
+const Player = player.Player;
+const Room = room.Room;
 
-// add code to load game from file
+const Noun = noun.Noun;
+const Nouns = noun.Nouns;
+
 exports.create = () => {
 	var g = new Game();
 
+	// TODO: add code to load game definition from file
 	g.add_room(new Room("sidewalk","sidewalk",
 							  "a city sidewalk in Toronto.  Passing traffic makes it unsafe to cross the street here."));
+	g.room("sidewalk").supporter = true;
+
 	g.add_room(new Room("porch", "porch", 
 							  "the front porch of a house.  The porch is painted green and purple, but the paint is peeling off the steps.  The rails are partially rotten and look flimsy"));
+	g.room("porch").supporter = true;
 	
 	var r = new Room("ff", "first floor",
 						"the first floor of the house");
@@ -20,10 +31,14 @@ exports.create = () => {
 	g.add_arc("west", "sidewalk", "porch");
 	g.add_arc("in", "porch", "ff");
 
+	
+	new Noun("cheese", [c.EDIBLE], "a block of tasty Cheddar");
+	g.room("sidewalk").add_item(Nouns.find("cheese"));
+
 	var p = new Player();
 	
 	g.set_player( p);
 	p.location = g.room("sidewalk");
 
-	return g;
+	return [g, p];
 }
