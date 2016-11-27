@@ -16,6 +16,7 @@ exports.create = () => {
 	var g = new Game();
 
 	// TODO: add code to load game definition from file
+
 	g.add_room(new Room("sidewalk","sidewalk",
 							  "a city sidewalk in Toronto.  Passing traffic makes it unsafe to cross the street here."));
 	g.room("sidewalk").supporter = true;
@@ -28,18 +29,14 @@ exports.create = () => {
 						"the first floor of the house");
 	g.add_room(r);
 
-	g.add_arc("west", "sidewalk", "porch");
-	g.add_arc("in", "porch", "ff");
+	g.add_arc("walkway", "west", "sidewalk", "porch");
+	g.add_arc("door", "in", "porch", "ff");
 
-	new Noun("cheese", [c.EDIBLE], "a block of tasty Cheddar");
-	g.room("sidewalk").add_item(Nouns.find("cheese"));
-
-	new Noun("wand", [], "a slender wand of bamboo, 25 centimeters long");
+	//new Noun("cheese", [c.EDIBLE], "a block of tasty Cheddar");
+	//g.room("sidewalk").add_item(Nouns.find("cheese"));
 
 	var p = new Player();
-
-	var wand = new Noun("wand", [], "a slender wand of bamboo, 25 centimeters long");
-	p.add_item(wand);
+	p.add_item(new Noun("wand", [], "a slender wand of bamboo, 25 centimeters long"));
 	
 	g.set_player( p);
 	p.goto(g.room("sidewalk"));

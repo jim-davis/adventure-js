@@ -22,17 +22,10 @@ Game.prototype.add_room = function (room) {
 	this.rooms[room.id] = room;
 };
 
-Game.prototype.follow = function (context, arc) {
-	// maybe add "transition hook" on arc
-	// or general game arc counter
-	this.player.goto(arc.to);
-	context.speak(this.player.room.describe());
-};
-
-Game.prototype.add_arc = function (direction, from_id, to_id, symmetric=true,hidden=false) {
+Game.prototype.add_arc = function (description, direction, from_id, to_id, symmetric=true,hidden=false) {
 	var from = this.room(from_id);
 	var to = this.room(to_id);
-	var arc = new Arc(from, to, direction);
+	var arc = new Arc(from, to, direction, description);
 	from.add_arc(arc);
 	if (symmetric) {
 		to.add_arc(arc.reverse_arc());

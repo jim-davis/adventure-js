@@ -37,7 +37,7 @@ function interaction_loop ([game, player]) {
 			} else if (word == "goto") {
 				context.speak("Not yet implemented");
 			} else if (arc = player.room.has_arc(word)) {
-				game.follow(context, arc);
+				arc.follow(context);
 			} else if (Arc.isDirection(word)) {
 				context.speak("You can't go that way.");				
 			} else if (verb = Verbs.find(word)) {

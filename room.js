@@ -16,14 +16,15 @@ Room.prototype.describe = function () {
 		s += _.map(this.contents, n => n.description).join("\n");
 	}
 
-	// should show only VISIBLE arcs
-	if (Object.keys(this.arcs).length > 0) {
-		s += "\nYou can go: ";
-		s += _.map(Object.keys(this.arcs),(dir) => dir).join();
-		s += "\n";
+	if (this.visible_exits()) {
+		s += "\n" + this.visible_exits().map(arc => arc.describe()).join("\n");
 	}
 
 	return s;
+};
+
+Room.prototype.visible_exits = function () {
+	return _.filter(this.arcs, "visible");
 };
 
 Room.prototype.preposition = function () {
