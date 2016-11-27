@@ -1,5 +1,7 @@
+var _ = require('lodash');
 const grammar = require ("./grammar.js");
 const dictionary = require ("./dictionary.js");
+const c = require("./categories.js");
 
 const Verbs = new dictionary.Dictionary();
 
@@ -16,9 +18,13 @@ Verb.prototype.conjugate = function (plural) {
 Verb.prototype.isIntransitive = function () {
 	return this.categories == null;
 }
+
+Verb.prototype.selects_for = function (noun) {
+	return _.find(this.categories, cat => cat == c.ANY || noun.has_category(cat));
+};
 	
 Verb.prototype.execute = function (context, noun) {
-	console.log("Nothing special happens");
+	context.speak("Nothing special happens");
 };
 
 function Motion (word) {

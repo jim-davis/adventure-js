@@ -13,22 +13,22 @@ new Verb("drop",  		 [c.ANY]).
 	execute = function (context, noun) {
 		if (context.player.has_item(noun)) {
 			context.player.room.add_item(context.player.remove_item(noun));
-			console.log("Dropped.");
+			context.speak("Dropped.");
 		} else {
-			console.log("You are not holding it.");
+			context.speak("You are not holding it.");
 		}
 	};
 
 new Verb("eat",   		 [c.EDIBLE]).
 	execute = function (context, noun) {
-		console.log("Yummy");
+		context.speak("Yummy");
 		// TODO destroy the item
 	};
 
 new Verb("extinguish", 	 [c.LIGHTABLE]); // must be lit
 new Verb("invent",       INTRANSITIVE).
 	execute = function (context) {
-		console.log(context.player.describe_inventory());
+		context.speak(context.player.describe_inventory());
 	};
 
 new Verb("fix",   		 [c.BREAKABLE]); // must be broken
@@ -36,7 +36,7 @@ new Verb("light", 		 [c.LIGHTABLE]); // must not be lit
 
 new Verb("look",       INTRANSITIVE).
 	execute = function (context) {
-		console.log(context.player.room.describe());
+		context.speak(context.player.room.describe());
 	};
 
 new Verb("read",  		 [c.LEGIBLE]);
@@ -47,10 +47,10 @@ new Verb("shoot", 		 [c.GUN]);		// Fixme SHOOT DWARF is different syntax!
 (new Verb("take",  		 [c.ANY])).
 	execute = function (context, noun) {
 	if (context.player.has_item(noun)) {
-		console.log("You already have it.");
+		context.speak("You already have it.");
 	} else {
 		context.player.add_item(context.player.room.remove_item(noun));
-		console.log(util.pick_random(["Taken",
+		context.speak(util.pick_random(["Taken",
 									  "You pick up " + noun.definiteNP()]));
 	}
 };

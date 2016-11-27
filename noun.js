@@ -1,3 +1,4 @@
+var _ = require('lodash');
 const grammar = require ("./grammar.js");
 const dictionary = require ("./dictionary.js");
 
@@ -13,6 +14,10 @@ function Noun (word, categories, description) {
 
 Noun.prototype.match = function (np) {
 	return this.word == np || this.synonyms.indexOf(np) >= 0;
+}
+
+Noun.prototype.has_category = function (c) {
+	return this.categories.indexOf(c) >= 0;
 }
 
 Noun.prototype.definiteNP = function () {

@@ -5,6 +5,10 @@ function Context (game, player) {
 
 Context.prototype.find = function (np) {
 	return this.player.find(np) || this.player.room.find(np);
-}
+};
+
+Context.prototype.speak = function (x) {
+	console.log(x);
+};
 
 exports.Context = Context;
