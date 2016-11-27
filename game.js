@@ -25,8 +25,8 @@ Game.prototype.add_room = function (room) {
 Game.prototype.follow = function (arc) {
 	// maybe add "transition hook" on arc
 	// or general game arc counter
-	this.player.location = arc.to;
-	console.log(this.player.location.describe());
+	this.player.goto(arc.to);
+	console.log(this.player.room.describe());
 };
 
 Game.prototype.add_arc = function (direction, from_id, to_id, symmetric=true,hidden=false) {

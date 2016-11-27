@@ -31,14 +31,18 @@ exports.create = () => {
 	g.add_arc("west", "sidewalk", "porch");
 	g.add_arc("in", "porch", "ff");
 
-	
 	new Noun("cheese", [c.EDIBLE], "a block of tasty Cheddar");
 	g.room("sidewalk").add_item(Nouns.find("cheese"));
 
+	new Noun("wand", [], "a slender wand of bamboo, 25 centimeters long");
+
 	var p = new Player();
+
+	var wand = new Noun("wand", [], "a slender wand of bamboo, 25 centimeters long");
+	p.add_item(wand);
 	
 	g.set_player( p);
-	p.location = g.room("sidewalk");
+	p.goto(g.room("sidewalk"));
 
 	return [g, p];
 }

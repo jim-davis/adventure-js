@@ -2,6 +2,10 @@ const loader = require("./loader.js");
 const readline = require('readline');
 const repl = require('repl');
 const Context = require("./context.js").Context;
+const verbs = require("./verbs.js");
+const Verbs  = require("./verb.js").Verbs;
+const Arc  = require("./arc.js").Arc;
+const util = require("./util.js");
 
 function adventure() {
 	interaction_loop(loader.create());
@@ -21,27 +25,43 @@ function interaction_loop ([game, player]) {
 		var done = false;
 		if (input.length > 0) {
 			var tokens = input.split(" ");
-			var verb = tokens[0];
-			switch(verb) {
-			case "quit":
+			var word = tokens[0];
+			var arc = null;
+			var verb = null;
+			if (word == "quit") {
 				done = true;
-				break;
-			case "debug":
+			} else if (word == "debug") {
 				rl.close();
 				repl.start('A> ');
-				break;
-			case "invent":
-				console.log("You are not carrying anything");
-				break;
-			default:
-				var a = player.location.has_arc(verb);
-				if (a) {
-					game.follow(a);
+			} else if (word == "goto") {
+				console.log("Not yet implemented");
+			} else if (arc = player.room.has_arc(word)) {
+				game.follow(arc);
+			} else if (Arc.isDirection(word)) {
+				console.log("You can't go that way.");				
+			} else if (verb = Verbs.find(word)) {
+				if (verb.isMotion) {
+					// TODO: if there is second token, then
+					// add code to look for an arc with that name,
+					// e.g. GO WEST
+					console.log("You can't go that way.");
+				} else if (verb.isIntransitive()) {
+					verb.execute(context);
+				} else if (tokens.length == 1) {
+					console.log(`What do you want to ${verb.word}`);
 				} else {
-					console.log(`${verb}`);
+					var arg = tokens[1];
+					var noun = context.find(arg);
+					if (! noun) {
+						console.log(util.pick_random(["You don't have that.",
+												 "I don't see any " + arg + " here"]));
+					} else {
+						// TODO add selection code
+						verb.execute(context, noun);
+					}
 				}
-
-				// if it looks like a direction: "you cant go that way"
+			} else {
+				console.log("You can't do that.");
 			}
 		}
 		if (done) {
@@ -52,9 +72,8 @@ function interaction_loop ([game, player]) {
 		} 
 	});
 
-	console.log(player.location.describe());
+	console.log(player.room.describe());
 	rl.prompt();
 };
 
 adventure();
-

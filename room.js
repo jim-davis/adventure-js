@@ -24,23 +24,42 @@ Room.prototype.describe = function () {
 	}
 
 	return s;
-}
+};
 
 Room.prototype.preposition = function () {
 	return this.supporter ? "on" : "in";
-}
+};
 
 Room.prototype.add_arc = function (arc) {
 	this.arcs[arc.direction]=arc;
-}
+};
 
 Room.prototype.has_arc = function (direction) {
 	return this.arcs[direction];
-}
+};
+
+Room.prototype.has_item = function (noun) {
+	return this.contents.indexOf(noun) >= 0;
+};
 
 Room.prototype.add_item = function (noun) {
 	this.contents.push(noun);
 	return noun;
+};
+
+Room.prototype.remove_item = function (noun) {
+	var idx = this.contents.indexOf(noun);
+	if (idx < 0) {
+		throw("Room " + this + " does not contain " + noun);
+	} else {
+		this.contents.splice(idx, 1)
+		return noun;
+	}
 }
+	
+
+Room.prototype.find = function (np) {
+	return _.find(this.contents, n => n.match(np));
+};
 
 exports.Room = Room;
