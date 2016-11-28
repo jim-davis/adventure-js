@@ -32,7 +32,16 @@ new Verb("invent",       INTRANSITIVE).
 	};
 
 new Verb("fix",   		 [c.BREAKABLE]); // must be broken
-new Verb("light", 		 [c.LIGHTABLE]); // must not be lit
+new Verb("light", 		 [c.LIGHTABLE]).
+	execute = function (context, noun) {
+		if (noun.get_state("lit")) {
+			context.speak("It's already on.");
+		} else {
+			noun.set_state("lit", true);
+			context.speak(noun.definiteNP().capitalize() + " glows brightly.");
+		}
+	};
+	
 
 new Verb("look",       INTRANSITIVE).
 	execute = function (context) {
@@ -46,7 +55,7 @@ new Verb("ride",  		 []);
 new Verb("repair",		 [c.BREAKABLE]);
 new Verb("shoot", 		 [c.GUN]);		// Fixme SHOOT DWARF is different syntax!
 
-(new Verb("take",  		 [c.ANY])).
+new Verb("take",  		 [c.ANY]).
 	execute = function (context, noun) {
 	if (context.player.has_item(noun)) {
 		context.speak("You already have it.");
@@ -56,6 +65,18 @@ new Verb("shoot", 		 [c.GUN]);		// Fixme SHOOT DWARF is different syntax!
 									  "You pick up " + noun.definiteNP()]));
 	}
 };
+
+new Verb("throw",  		 [c.ANY]).
+	execute = function (context, noun) {
+		if (context.player.has_item(noun)) {
+			context.player.room.add_item(context.player.remove_item(noun));
+			context.speak("Thrown.");
+		} else {
+			context.speak("You are not holding it.");
+		}
+	};
+
+
 
 new Verb("wave",  		 [c.ANY]);
 

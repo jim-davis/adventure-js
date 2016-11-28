@@ -35,7 +35,15 @@ function interaction_loop ([game, player]) {
 				rl.close();
 				repl.start('A> ');
 			} else if (word == "goto") {
-				context.speak("Not yet implemented");
+				// useful when debugging
+				if (tokens.length == 1) {
+					context.speak("You can't do that.");
+				} else if (room = game.rooms[tokens[1]]) {
+					player.goto(room);
+					context.speak(player.room.describe());
+				} else {
+					context.speak("No such place.");
+				}
 			} else if (arc = player.room.has_arc(word)) {
 				arc.follow(context);
 			} else if (Arc.isDirection(word)) {

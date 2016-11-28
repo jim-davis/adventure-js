@@ -22,10 +22,10 @@ function pluralize(s) {
 	}
 }
 
-function pluralize_if (isPlural, s) {
-	return isPlural ? pluralize(s) : s;
-}
-
 exports.pluralize = pluralize;
-exports.pluralize_if = pluralize_if;
 
+exports.pluralize_if = (isPlural, s) => isPlural ? pluralize(s) : s;
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}

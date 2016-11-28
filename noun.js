@@ -9,6 +9,7 @@ function Noun (word, categories, description) {
 	this.synonyms = [];
 	this.categories = categories;
 	this.description = description;
+	this.state = {};
 	Nouns.add_word(this);
 }
 
@@ -24,6 +25,15 @@ Noun.prototype.definiteNP = function () {
 	// HMMM.  Is this right, if player used a synonym?
 	return "the " + this.word;
 };
+
+Noun.prototype.get_state = function (s) {
+	return this.state[s];
+}
+
+Noun.prototype.set_state = function (s, v) {
+	this.state[s]=v;
+};
+
 
 
 exports.Noun = Noun;
