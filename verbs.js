@@ -39,6 +39,8 @@ new Verb("look",       INTRANSITIVE).
 		context.speak(context.player.room.describe());
 	};
 
+new Verb("open",         [c.DOOR, c.CONTAINER]);
+
 new Verb("read",  		 [c.LEGIBLE]);
 new Verb("ride",  		 []);
 new Verb("repair",		 [c.BREAKABLE]);
@@ -58,6 +60,9 @@ new Verb("shoot", 		 [c.GUN]);		// Fixme SHOOT DWARF is different syntax!
 new Verb("wave",  		 [c.ANY]);
 
 new Motion("climb");
+new Motion("crawl");
 new Motion("go");
 new Motion("jump");
+new Motion("run");
+new Motion("skip");
 new Motion("walk");

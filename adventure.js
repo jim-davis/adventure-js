@@ -42,14 +42,22 @@ function interaction_loop ([game, player]) {
 				context.speak("You can't go that way.");				
 			} else if (verb = Verbs.find(word)) {
 				if (verb.isMotion) {
-					// TODO: if there is second token, then
-					// add code to look for an arc with that name,
-					// e.g. GO WEST
-					context.speak("You can't go that way.");
+					if (tokens.length == 1) {
+						context.speak(verb.word + " where/which way?. Try again, say a little more");
+					} else {
+						var arg = tokens[1];
+						if (arc = player.room.has_arc(arg)) {
+							arc.follow(context);
+						} else if (Arc.isDirection(arg)) {
+							context.speak("You can't " + verb.word + " in that direction.");
+						} else {
+							context.speak("Makes no sense.");
+						}
+					}
 				} else if (verb.isIntransitive()) {
 					verb.execute(context);
 				} else if (tokens.length == 1) {
-					context.speak(`What do you want to ${verb.word}`);
+					context.speak(verb.word + " what?. Try again, say a little more");					
 				} else {
 					var arg = tokens[1];
 					var noun = context.find(arg);

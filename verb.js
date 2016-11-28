@@ -28,8 +28,8 @@ Verb.prototype.execute = function (context, noun) {
 };
 
 function Motion (word) {
+	Verb.call(this, word, []);
 	this.isMotion = true;
-	Verb.call(word, []);
 }
 
 Motion.prototype = Verb;

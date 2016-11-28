@@ -20,6 +20,7 @@ Game.prototype.room = function (id) {
 
 Game.prototype.add_room = function (room) {
 	this.rooms[room.id] = room;
+	return room;
 };
 
 Game.prototype.add_arc = function (description, direction, from_id, to_id, symmetric=true,hidden=false) {
