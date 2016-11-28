@@ -31,6 +31,7 @@ Game.prototype.add_arc = function (description, direction, from_id, to_id, symme
 	if (symmetric) {
 		to.add_arc(arc.reverse_arc());
 	}
+	return arc;
 };
 
 exports.Game = Game;

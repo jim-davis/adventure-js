@@ -7,5 +7,4 @@ exports.GUN = "gun";
 exports.LEGIBLE = "legible";
 exports.LIQUID = "liquid";
 exports.LIGHTABLE = "lightable";
-exports.MOBILE = "mobile";
-
+exports.MOVEABLE = "moveable";

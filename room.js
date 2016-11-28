@@ -57,7 +57,11 @@ Room.prototype.remove_item = function (noun) {
 		return noun;
 	}
 }
-	
+
+Room.prototype.set_supporter = function (b) {
+	this.supporter = b;
+	return this;
+};
 
 Room.prototype.find = function (np) {
 	return _.find(this.contents, n => n.match(np));

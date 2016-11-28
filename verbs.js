@@ -26,12 +26,12 @@ new Verb("eat",   		 [c.EDIBLE]).
 	};
 
 new Verb("extinguish", 	 [c.LIGHTABLE]); // must be lit
+new Verb("fix",   		 [c.BREAKABLE]); // must be broken
 new Verb("invent",       INTRANSITIVE).
 	execute = function (context) {
 		context.speak(context.player.describe_inventory());
 	};
-
-new Verb("fix",   		 [c.BREAKABLE]); // must be broken
+new Verb("kick",         []);
 new Verb("light", 		 [c.LIGHTABLE]).
 	execute = function (context, noun) {
 		if (noun.get_state("lit")) {
@@ -55,7 +55,7 @@ new Verb("ride",  		 []);
 new Verb("repair",		 [c.BREAKABLE]);
 new Verb("shoot", 		 [c.GUN]);		// Fixme SHOOT DWARF is different syntax!
 
-new Verb("take",  		 [c.ANY]).
+new Verb("take",  		 [c.MOVEABLE,c.EDIBLE]).
 	execute = function (context, noun) {
 	if (context.player.has_item(noun)) {
 		context.speak("You already have it.");
@@ -69,12 +69,21 @@ new Verb("take",  		 [c.ANY]).
 new Verb("throw",  		 [c.ANY]).
 	execute = function (context, noun) {
 		if (context.player.has_item(noun)) {
-			context.player.room.add_item(context.player.remove_item(noun));
-			context.speak("Thrown.");
+			if (noun.word == "cheese" && context.player.room.find("raccoon")) {
+				context.player.remove_item(noun);
+				context.player.room.remove_item(context.player.room.find("raccoon"));
+				context.speak("The raccoon takes a bite of the cheese, then spits it out in horror and shock!  Aughh, cheese!  It runs to the corner of the patio, climbs the fence, and quickly scurries away");
+			} else {
+			
+				context.player.room.add_item(context.player.remove_item(noun));
+				context.speak("Thrown.");
+			}
 		} else {
 			context.speak("You are not holding it.");
 		}
 	};
+
+new Verb("xyzzy",       INTRANSITIVE);
 
 
 

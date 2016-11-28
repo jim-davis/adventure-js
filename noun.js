@@ -34,7 +34,5 @@ Noun.prototype.set_state = function (s, v) {
 	this.state[s]=v;
 };
 
-
-
 exports.Noun = Noun;
 exports.Nouns = Nouns;
