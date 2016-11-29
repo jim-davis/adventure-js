@@ -13,11 +13,11 @@ Room.prototype.describe = function () {
 	var s = "You are " + this.preposition() + " " + this.description;
 	if (this.contents.length > 0) {
 		s += "\nYou see:\n";
-		s += _.map(this.contents, n => n.description).join("\n");
+		s += _.map(this.contents, n => " " + n.description).join("\n");
 	}
 
 	if (this.visible_exits()) {
-		s += "\n" + this.visible_exits().map(arc => arc.describe()).join("\n");
+		s += "\n\n" + this.visible_exits().map(arc => arc.describe()).join("\n");
 	}
 
 	return s;

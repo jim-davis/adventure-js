@@ -16,9 +16,7 @@ Player.prototype.add_item = function (noun) {
 
 Player.prototype.remove_item = function (noun) {
 	var idx = this.inventory.indexOf(noun);
-	if (idx < 0) {
-		throw("You do not have " + noun);
-	} else {
+	if (idx >=0) {
 		this.inventory.splice(idx, 1)
 		return noun;
 	}

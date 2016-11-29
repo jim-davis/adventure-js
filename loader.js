@@ -1,22 +1,14 @@
-const game = require ("./game.js");
-const player = require ("./player.js");
+const Game = require ("./game.js").Game;
 const room = require ("./room.js");
 const arc = require("./arc.js");
 const noun = require("./noun.js");
 const c = require("./categories.js");
-
-const Game = game.Game;
-const Player = player.Player;
 const Room = room.Room;
-
 const Noun = noun.Noun;
 const Nouns = noun.Nouns;
 
 exports.create = () => {
 	var g = new Game();
-
-	var p = new Player();
-	p.add_item(new Noun("wand", [c.MOVEABLE], "a slender wand of bamboo, 25 centimeters long"));
 
 	// TODO: add code to load game definition from file
 
@@ -31,7 +23,9 @@ exports.create = () => {
 	g.add_arc("walkway", "west", "sidewalk", "porch");
 	
 	g.add_room(new Room("ff", "first floor",
-						"the first floor of the house"));
+						"the first floor of the house"))
+		.add_item(new Noun("wand", [c.MOVEABLE], "a slender wand of bamboo, 25 centimeters long"));
+
 	g.add_arc("door", "in", "porch", "ff");
 
 	g.add_room(new Room("kitchen", "kitchen", "the kitchen")).
@@ -44,14 +38,30 @@ exports.create = () => {
 
 	g.add_arc("flight of stairs", "down", "ff", "basement");
 
-	g.add_room(new Room("porch", "porch", "a small porch")).
-		set_supporter(true)
+	g.add_room(new Room("porch", "porch", "a small porch"))
+		.set_supporter(true)
 		.add_item(new Noun("raccoon", [], "a raccoon"));
+
+	g.when(/throw wand/).at("raccoon").holding("wand")
+		.do((context) => {
+			var noun = context.find("wand");
+			context.player.room.add_item(context.player.remove_item(noun));
+			context.speak("The raccoon deftly grabs the wand and waves it at you, chittering a spell in Raccoonian.  You see a flash of light, and then all vanishes.");
+			context.player.goto(g.room("basement"));
+		});
+
+	g.when(/throw cheese/).at("raccoon").holding("cheese")
+		.do((context) => {
+			var noun = context.find("cheese");
+			context.player.remove_item(noun);
+			context.player.room.remove_item(context.player.room.find("raccoon"));
+			context.speak("The raccoon takes a bite of the cheese, then spits it out in horror and shock!  Aughh, cheese!  It runs to the corner of the patio, climbs the fence, and quickly scurries away");
+		});
 
 	g.add_arc("door", "out", "kitchen", "porch");
 
-	g.add_room(new Room("patio", "patio", "a small patio.  The ground is covered in stone tiles")).
-		set_supporter(true);
+	g.add_room(new Room("patio", "patio", "a small patio.  The ground is covered in stone tiles"))
+		.set_supporter(true);
 
 	a = g.add_arc("couple of steps", "down", "porch", "patio");
 	a.follow = function (context) {
@@ -63,8 +73,9 @@ exports.create = () => {
 	};
 	
 	//---------------------
-	g.set_player( p);
-	p.goto(g.room("sidewalk"));
 
-	return [g, p];
+	g.goto("sidewalk");
+
+
+	return g;
 }

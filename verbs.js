@@ -69,23 +69,14 @@ new Verb("take",  		 [c.MOVEABLE,c.EDIBLE]).
 new Verb("throw",  		 [c.ANY]).
 	execute = function (context, noun) {
 		if (context.player.has_item(noun)) {
-			if (noun.word == "cheese" && context.player.room.find("raccoon")) {
-				context.player.remove_item(noun);
-				context.player.room.remove_item(context.player.room.find("raccoon"));
-				context.speak("The raccoon takes a bite of the cheese, then spits it out in horror and shock!  Aughh, cheese!  It runs to the corner of the patio, climbs the fence, and quickly scurries away");
-			} else {
-			
-				context.player.room.add_item(context.player.remove_item(noun));
-				context.speak("Thrown.");
-			}
+			context.player.room.add_item(context.player.remove_item(noun));
+			context.speak("Thrown.");
 		} else {
 			context.speak("You are not holding it.");
 		}
 	};
 
 new Verb("xyzzy",       INTRANSITIVE);
-
-
 
 new Verb("wave",  		 [c.ANY]);
 

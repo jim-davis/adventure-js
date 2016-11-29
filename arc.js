@@ -27,7 +27,7 @@ Arc.prototype.describe = function () {
 
 Arc.prototype.follow = function (context) {
 	// can add tests here to prohibit some arcs
-	context.speak("You go " + this.direction);
+	context.speak("You go " + this.direction + ".\n");
 	context.player.goto(this.to);
 	context.speak(context.player.room.describe());
 };
