@@ -24,7 +24,7 @@ exports.create = () => {
 	
 	g.add_room(new Room("ff", "first floor",
 						"the first floor of the house"))
-		.add_item(new Noun("wand", [c.MOVEABLE], "a slender wand of bamboo, 25 centimeters long"));
+		.add_item(new Noun("wand", [c.MOVEABLE, c.LIGHTABLE], "a slender wand of bamboo, 25 centimeters long"));
 
 	g.add_arc("door", "in", "porch", "ff");
 
