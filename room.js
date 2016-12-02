@@ -51,7 +51,8 @@ Room.prototype.add_arc = function (arc) {
 };
 
 Room.prototype.has_arc = function (direction) {
-	return this.arcs[direction];
+	return this.arcs[direction] ||
+		_.find(this.arcs, a => a.match(direction));
 };
 
 Room.prototype.has_item = function (noun) {

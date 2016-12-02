@@ -25,7 +25,12 @@ Adhoc.prototype.execute = function (context, input) {
 function Builder (game, regexp) {
 	this.game = game;
 	this.regexp = regexp;
+	this.noun_in_room = null;
+	this.noun_in_inventory = null;
+	this.state_predicate = null;
+	this.room_id = null;
 }
+
 
 // The object described by np must be in the same room
 Builder.prototype.at = function (np) {
@@ -39,15 +44,12 @@ Builder.prototype.holding = function (np) {
 	return this;
 };
 
-// TODO add a test of the objects's state, e.g. lamp is lit
-
-// inverts the sense of the next test.
-Builder.prototype.not = function () {
-	throw "Not implemented";
+Builder.prototype.state = function (f) {
+	this.state_predicate = f;
 	return this;
 };
 
-// the plater must be in the named room
+// the player must be in the named room
 Builder.prototype.in = function (room_id) {
 	this.room_id = room_id;
 	return this;
@@ -62,6 +64,8 @@ Builder.prototype.do = function (lambda) {
 Builder.prototype.predicate = function () {
 	return (context, input) => {
 		return this.regexp.test(input) &&
+			(!this.state_predicate ||
+			 this.state_predicate.call(context, context)) &&
 			(!this.noun_in_room || context.player.room.find(this.noun_in_room)) &&
 			(!this.room_id || context.player.room.id == this.room_id) &&
 			(!this.noun_in_inventory || context.player.find(this.noun_in_inventory));

@@ -1,0 +1,11 @@
+Look noun should show more detail
+Maybe add one-shot adhocs?
+
+story:
+token
+wait
+streetcar
+
+Active nouns.
+ticking
+

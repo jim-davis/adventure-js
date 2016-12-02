@@ -1,10 +1,12 @@
 const opposite = require ("./opposite.js");
+const grammar = require("./grammar.js");
 
-function Arc (from, to, direction, description) {
+function Arc (from, to, direction, noun_phrase) {
 	this.from = from;
 	this.to=to;
 	this.direction=direction;
-	this.description=description;
+	this.noun_phrase=noun_phrase;
+	this.noun = grammar.noun_phrase_noun(noun_phrase);
 	this.traversal = null;
 }
 
@@ -22,11 +24,11 @@ Arc.prototype.reverse_arc = function () {
 	return new Arc(this.to, 
 				   this.from,
 				   opposite.direction(this.direction),
-				   this.description);
+				   this.noun_phrase);
 }
 
 Arc.prototype.describe = function () {
-	return "A " + this.description + " leads " + this.direction;
+	return "A " + this.noun_phrase + " leads " + this.direction;
 };
 
 Arc.prototype.enabled = function (context) {
@@ -49,6 +51,10 @@ Arc.prototype.follow = function (context) {
 
 Arc.prototype.traverse = function (context) {
 	context.speak((this.traversal || ("You go " + this.direction)) + ".\n");
+};
+
+Arc.prototype.match = function (word) {
+	return this.direction == word || this.noun == word;
 };
 
 exports.Arc = Arc;

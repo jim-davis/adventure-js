@@ -32,10 +32,10 @@ Game.prototype.add_room = function (room) {
 	return room;
 };
 
-Game.prototype.add_arc = function (description, direction, from_id, to_id, symmetric=true,hidden=false) {
+Game.prototype.add_arc = function (np, direction, from_id, to_id, symmetric=true,hidden=false) {
 	var from = this.room(from_id);
 	var to = this.room(to_id);
-	var arc = new Arc(from, to, direction, description);
+	var arc = new Arc(from, to, direction, np);
 	from.add_arc(arc);
 	if (symmetric) {
 		to.add_arc(arc.reverse_arc());

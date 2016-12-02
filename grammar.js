@@ -29,3 +29,5 @@ exports.pluralize_if = (isPlural, s) => isPlural ? pluralize(s) : s;
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
+
+exports.noun_phrase_noun = np => np.split(/ /)[np.split(/ /).length -1];
