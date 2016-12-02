@@ -49,7 +49,7 @@ Builder.prototype.not = function () {
 
 // the plater must be in the named room
 Builder.prototype.in = function (room_id) {
-	this.room_id = id;
+	this.room_id = room_id;
 	return this;
 };
 

@@ -7,24 +7,39 @@ function Room(id, brief, description) {
 	this.supporter = false;
 	this.arcs = {};
 	this.contents = [];
+	this.state = {};
 }
 
-Room.prototype.describe = function () {
-	var s = "You are " + this.preposition() + " " + this.description;
+// describe from player's perspective
+Room.prototype.describe = function (context) {
+	var s = "You are " + this.preposition() + " " + this.get_description(context);
 	if (this.contents.length > 0) {
 		s += "\nYou see:\n";
 		s += _.map(this.contents, n => " " + n.description).join("\n");
 	}
 
-	if (this.visible_exits()) {
+	if (this.visible_exits(context)) {
 		s += "\n\n" + this.visible_exits().map(arc => arc.describe()).join("\n");
 	}
 
 	return s;
 };
 
-Room.prototype.visible_exits = function () {
-	return _.filter(this.arcs, "visible");
+Room.prototype.get_description = function (context) {
+	return this.description;
+};
+
+Room.prototype.get_state = function (s) {
+	return this.state[s];
+}
+
+Room.prototype.set_state = function (s, v) {
+	this.state[s]=v;
+};
+
+
+Room.prototype.visible_exits = function (context) {
+	return _.filter(this.arcs, a => a.is_visible(context));
 };
 
 Room.prototype.preposition = function () {
@@ -45,7 +60,7 @@ Room.prototype.has_item = function (noun) {
 
 Room.prototype.add_item = function (noun) {
 	this.contents.push(noun);
-	return noun;
+	return this;
 };
 
 Room.prototype.remove_item = function (noun) {

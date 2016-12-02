@@ -45,7 +45,7 @@ new Verb("light", 		 [c.LIGHTABLE]).
 
 new Verb("look",       INTRANSITIVE).
 	execute = function (context) {
-		context.speak(context.player.room.describe());
+		context.look();
 	};
 
 new Verb("open",         [c.DOOR, c.CONTAINER]);
@@ -55,16 +55,21 @@ new Verb("ride",  		 []);
 new Verb("repair",		 [c.BREAKABLE]);
 new Verb("shoot", 		 [c.GUN]);		// Fixme SHOOT DWARF is different syntax!
 
-new Verb("take",  		 [c.MOVEABLE,c.EDIBLE]).
+new Verb("take",  		 [c.MOVEABLE]).
 	execute = function (context, noun) {
 	if (context.player.has_item(noun)) {
 		context.speak("You already have it.");
 	} else {
 		context.player.add_item(context.player.room.remove_item(noun));
 		context.speak(util.pick_random(["Taken",
-									  "You pick up " + noun.definiteNP()]));
+										"You pick up " + noun.definiteNP()]));
 	}
-};
+	};
+
+new Verb("use",          [c.ANY]).
+	execute = function (context, noun) {
+		context.speak("Can you be more specific?");
+	};
 
 new Verb("throw",  		 [c.ANY]).
 	execute = function (context, noun) {
@@ -87,3 +92,5 @@ new Motion("jump");
 new Motion("run");
 new Motion("skip");
 new Motion("walk");
+
+

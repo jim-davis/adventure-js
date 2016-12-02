@@ -27,10 +27,8 @@ function interaction_loop (game) {
 		}
 	});
 
-	game.speak(game.player.room.describe());
+	game.context.look();
 	rl.prompt();
 };
-
-
 
 adventure();

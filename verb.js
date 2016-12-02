@@ -5,7 +5,11 @@ const c = require("./categories.js");
 
 const Verbs = new dictionary.Dictionary();
 
-function Verb (word, categories) {
+Verbs.categorized_for = function (cat) {
+	return _.filter(this.all(), v => v.selects_for_category(cat));
+};
+
+function Verb (word, categories, predicate) {
 	this.word = word;
 	this.categories = categories;
 	Verbs.add_word(this);
@@ -22,6 +26,10 @@ Verb.prototype.isIntransitive = function () {
 Verb.prototype.selects_for = function (noun) {
 	return _.find(this.categories, cat => cat == c.ANY || noun.has_category(cat));
 };
+
+Verb.prototype.selects_for_category = function (cat) {
+	return this.categories && this.categories.indexOf(cat) >= 0;
+};
 	
 Verb.prototype.execute = function (context, noun) {
 	context.speak("Nothing special happens");
@@ -32,9 +40,10 @@ function Motion (word) {
 	this.isMotion = true;
 }
 
-Motion.prototype = Verb;
+Motion.prototype = new Verb;
 
 exports.Verb = Verb;
+
 exports.Verbs = Verbs;
 exports.Motion = Motion;
 

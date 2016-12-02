@@ -11,4 +11,8 @@ Context.prototype.speak = function (x) {
 	console.log(x);
 };
 
+Context.prototype.look = function () {
+	this.speak(this.player.room.describe(this));
+};
+
 exports.Context = Context;

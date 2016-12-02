@@ -79,7 +79,7 @@ Game.prototype.interpret = function (input) {
 			this.speak("You can't do that.");
 		} else if (room = this.rooms[tokens[1]]) {
 			this.context.player.goto(room);
-			this.speak(this.player.room.describe());
+			this.context.look();
 		} else {
 			this.speak("No such place.");
 		}
@@ -113,7 +113,9 @@ Game.prototype.interpret = function (input) {
 		} else if (verb.isIntransitive()) {
 			verb.execute(this.context);
 		} else if (tokens.length == 1) {
-			this.speak(verb.word + " what?. Try again, say a little more");				} else {
+			this.speak(verb.word + " what?. Try again, say a little more");
+		} else {
+			
 			var arg = tokens[1];
 			var noun = this.context.find(arg);
 			if (! noun) {
@@ -121,6 +123,7 @@ Game.prototype.interpret = function (input) {
 												"I don't see any " + arg + " here"]));
 			} else {
 				if ( verb.selects_for(noun)) {
+					// This might be a better place to put the adhoc verb
 					verb.execute(this.context, noun);
 				} else {
 					this.speak("You can't " + verb.word + " that");

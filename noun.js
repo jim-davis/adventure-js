@@ -4,11 +4,12 @@ const dictionary = require ("./dictionary.js");
 
 const Nouns = new dictionary.Dictionary();
 
-function Noun (word, categories, description) {
+function Noun (word, categories, description, detail) {
 	this.word = word;
 	this.synonyms = [];
 	this.categories = categories;
-	this.description = description;
+	this.description = description; 
+	this.detail = detail;
 	this.state = {};
 	Nouns.add_word(this);
 }
@@ -32,6 +33,11 @@ Noun.prototype.get_state = function (s) {
 
 Noun.prototype.set_state = function (s, v) {
 	this.state[s]=v;
+};
+
+Noun.prototype.default_verb = function () {
+	var primary_category = this.categories && this.categories.length > 0 && this.categories[0];
+	return null;
 };
 
 exports.Noun = Noun;
