@@ -9,7 +9,7 @@ const Nouns = noun.Nouns;
 const Arc = arc.Arc;
 
 function add_rooms(g) {
-	g.add_room(new Room("sidewalk","sidewalk",
+	g.add_room(new Room("sidewalk","sidewalk in front of a house",
 						"a city sidewalk in Toronto.  Passing traffic makes it unsafe to cross the street here.")).
 		set_supporter(true);
 
@@ -43,8 +43,17 @@ function add_rooms(g) {
 
 
 	g.add_room(new Room("stop", "streetcar stop",
-						"the corner of two big streets.  The light is red in both directions, you better not cross.\nIn the distance you see a streetcar approaching"))
+						"the corner of two big streets.  The light is red in both directions, you better not cross.\nIn the distance you see a streetcar approaching."))
 		.set_supporter(true);	// on?  at?
+
+	g.add_room(new Room("stop1", "streetcar stop",
+						"the corner of two big streets.  The light is green, you could cross the street now if you wanted.  The streetcar is getting closer."))
+		.set_supporter(true);	// on?  at?
+
+	g.add_room(new Room("stop2", "streetcar stop",
+						"the corner of two big streets.  The streetcar is here, you could board it."))
+		.set_supporter(true);	// on?  at?
+
 
 	return g;
 }
@@ -56,7 +65,7 @@ function add_arcs(g) {
 		.set_traversal_message("You walk a long way, but don't see anything interesting, so you turn around.");
 
 	g.add_arc("sidewalk", "south", "sidewalk", "stop", false)
-		.set_traversal_message("You head south, and reach a bigger street, where you turn right");
+		.set_traversal_message("You head south, and reach a bigger street, where you turn right.");
 
 	g.add_arc("sidewalk", "east", "stop", "sidewalk", false)
 		.set_traversal_message("You head east, and when you see a familiar street you turn left");
@@ -81,8 +90,6 @@ function add_arcs(g) {
 
 	g.add_arc("door", "out", "kitchen", "back_porch");
 
-
-
 	a = g.add_arc("couple of steps", "down", "back_porch", "patio");
 	a.follow = function (context) {
 		if (this.from.find("raccoon")) {
@@ -92,6 +99,19 @@ function add_arcs(g) {
 		}
 	};
 
+	g.add_arc("", "wait", "stop", "stop1", false, true)
+	.set_traversal_message("You wait a while.  The traffic light turns green.  The streetcar gets closer.");
+	g.add_arc("sidewalk", "east", "stop1", "sidewalk", false)
+		.set_traversal_message("You stop waiting around and head back east.  When you see a familiar street you turn left and go up it.");
+
+
+	g.add_arc("", "wait", "stop1", "stop2", false, true)
+	.set_traversal_message("You wait some more.  The streetcar pulls up.");
+	g.add_arc("sidewalk", "east", "stop2", "sidewalk", false)
+		.set_traversal_message("You walk away from the streetcar.  When you see a familiar street you turn left.");
+
+	g.add_arc("", "wait", "stop2", "stop", false, true)
+	.set_traversal_message("The streetcar departs without you.");
 
 	return g;
 }
