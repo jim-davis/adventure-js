@@ -25,12 +25,34 @@ exports.create = () => {
 			"the remains of the front porch.  The rails have fallen off, the boards are cracked and broken, and what's left looks like it might collapse at any second." : this.description;
 	};
 
-	g.when(/jump/).in("front_porch")
-		.do(context => {
-			context.player.room.set_state("broken", true);
-			context.speak("The force of your jumping causes the already fragile porch to collapse!\n");
-			context.look();
-		});
+	g.when(/jump/).in("front_porch").do(context => {
+		context.player.room.set_state("broken", true);
+		context.speak("The force of your jumping causes the already fragile porch to collapse!\n");
+		context.look();
+	});
+	g.when(/smash/).in("front_porch").do(context => {
+		context.player.room.set_state("broken", true);
+		context.speak("You smash the porch!\n");
+		context.look();
+	});
+
+	g.when(/stomp/).in("front_porch").do(context => {
+		context.player.room.set_state("broken", true);
+		context.speak("You stomp once, twice, three times.  The porch collapses!\n");
+		context.look();
+	});
+
+	g.when(/break/).in("front_porch").do(context => {
+		context.player.room.set_state("broken", true);
+		context.speak("You stomp and kick, and the porch breaks!\n");
+		context.look();
+	});
+
+	g.when(/kick/).in("front_porch").do(context => {
+		context.player.room.set_state("broken", true);
+		context.speak("Two or three hard kicks, and the porch collapses!\n");
+		context.look();
+	});
 
 	g.add_arc("walkway", "west", "sidewalk", "front_porch");
 
@@ -63,20 +85,7 @@ exports.create = () => {
 	a.is_visible = function (context) {
 		return this.from.get_state("broken");
 	};
-
-	a.follow = function (context) {
-		if (this.enabled(context)) {
-			context.speak("You carefully climb down.\n");
-			context.player.goto(this.to);
-			context.speak(context.player.room.describe());
-		} else {
-			if (this.is_visible(context)) {
-				context.speak("You can't");
-			} else {
-				context.speak("You can't go that way.");
-			}
-		}
-	};
+	a.traversal = "You carefully climb down.";
 
 	g.room("front_porch").add_arc(a);
 

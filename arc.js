@@ -5,6 +5,7 @@ function Arc (from, to, direction, description) {
 	this.to=to;
 	this.direction=direction;
 	this.description=description;
+	this.traversal = null;
 }
 
 Arc.directions = ["up", "down", "north", "south", "east", "west", "in", "out"];
@@ -34,9 +35,9 @@ Arc.prototype.enabled = function (context) {
 
 Arc.prototype.follow = function (context) {
 	if (this.enabled(context)) {
-		context.speak("You go " + this.direction + ".\n");
+		this.traverse(context);
 		context.player.goto(this.to);
-		context.speak(context.player.room.describe());
+		context.look();
 	} else {
 		if (this.is_visible(context)) {
 			context.speak("You can't");
@@ -46,5 +47,8 @@ Arc.prototype.follow = function (context) {
 	}
 };
 
+Arc.prototype.traverse = function (context) {
+	context.speak((this.traversal || ("You go " + this.direction)) + ".\n");
+};
 
 exports.Arc = Arc;
