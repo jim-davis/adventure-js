@@ -4,6 +4,7 @@ function Player() {
 	this.inventory=[];
 	this.room=null;
 	// state (hungry,thirsty, tired)?
+	this.rooms_seen = {};
 }
 
 Player.prototype.has_item = function (noun) {
@@ -39,6 +40,16 @@ Player.prototype.goto = function (room) {
 		throw "Can't go to NULL";
 	}
 	this.room = room;
+};
+
+Player.prototype.describe_current_room = function (context, verbose=false) {
+	var s = this.room.describe(context, verbose);
+	this.rooms_seen[this.room.id] = true;
+	return s;
+};
+
+Player.prototype.has_seen = function (room) {
+	return this.rooms_seen[room.id] == true;
 };
 
 exports.Player = Player;

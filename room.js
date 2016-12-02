@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var grammar = require("./grammar.js")
 
 function Room(id, brief, description) {
 	this.id = id;
@@ -11,19 +12,31 @@ function Room(id, brief, description) {
 }
 
 // return the string that describes the room from player's perspective
-Room.prototype.describe = function (context) {
-	var s = "You are " + this.preposition() + " " + this.get_description(context);
+Room.prototype.describe = function (context, verbose) {
+	var s = (context.player.has_seen(this) && ! verbose) ? 
+		this.brief : 
+		"You are " + this.preposition() + " " + this.get_description(context);
+
 	if (this.contents.length > 0) {
 		s += "\nYou see:\n";
 		s += _.map(this.contents, n => " " + n.description).join("\n");
 	}
 
 	if (this.visible_exits(context)) {
-		s += "\n\n" + this.visible_exits().map(arc => arc.describe()).join("\n");
+		var arcs_by_noun = _.groupBy(this.visible_exits(), a => a.noun_phrase);
+		s += "\n\n" + _.map(Object.keys(arcs_by_noun),
+			  n => { var arcs = arcs_by_noun[n];
+					 return arcs.length == 1 ? arcs[0].describe() : 
+					 grammar.pluralize(arcs[0].noun_phrase) + 
+					 " lead " +
+					 grammar.comma_separated_list(_.map(arcs, a => a.direction));
+					 })
+			.join("\n");
 	}
 
 	return s;
 };
+
 
 // normally this is just the static description of the room
 // but it may be state dependent.

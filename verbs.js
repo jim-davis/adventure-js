@@ -45,7 +45,7 @@ new Verb("light", 		 [c.LIGHTABLE]).
 
 new Verb("look",       INTRANSITIVE).
 	execute = function (context) {
-		context.look();
+		context.look(true);
 	};
 
 new Verb("open",         [c.DOOR, c.CONTAINER]);

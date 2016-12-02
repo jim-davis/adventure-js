@@ -6,6 +6,7 @@ const c = require("./categories.js");
 const Room = room.Room;
 const Noun = noun.Noun;
 const Nouns = noun.Nouns;
+const Arc = arc.Arc;
 
 function add_rooms(g) {
 	g.add_room(new Room("sidewalk","sidewalk",
@@ -40,7 +41,10 @@ function add_rooms(g) {
 	g.add_room(new Room("patio", "patio", "a small patio.  The ground is covered in stone tiles"))
 		.set_supporter(true);
 
-	
+
+	g.add_room(new Room("stop", "streetcar stop",
+						"the corner of two big streets.  The light is red in both directions, you better not cross.\nIn the distance you see a streetcar approaching"))
+		.set_supporter(true);	// on?  at?
 
 	return g;
 }
@@ -48,12 +52,21 @@ function add_rooms(g) {
 
 function add_arcs(g) {
 	g.add_arc("walkway", "west", "sidewalk", "front_porch");
+	g.add_arc("sidewalk", "north", "sidewalk", "sidewalk")
+		.set_traversal_message("You walk a long way, but don't see anything interesting, so you turn around.");
+
+	g.add_arc("sidewalk", "south", "sidewalk", "stop", false)
+		.set_traversal_message("You head south, and reach a bigger street, where you turn right");
+
+	g.add_arc("sidewalk", "east", "stop", "sidewalk", false)
+		.set_traversal_message("You head east, and when you see a familiar street you turn left");
+
 	g.add_arc("door", "in", "front_porch", "ff");
 	g.add_arc("hallway", "west", "ff", "kitchen");
 	g.add_arc("flight of stairs", "down", "ff", "basement");
 	g.add_arc("door", "out", "paint_closet", "basement");
 
-	var a = new arc.Arc(g.room("front_porch"), g.room("paint_closet"), "down", "hole");
+	var a = new Arc(g.room("front_porch"), g.room("paint_closet"), "down", "hole");
 	a.enabled = function (context) {
 		return this.from.get_state("broken");
 	};
@@ -75,7 +88,7 @@ function add_arcs(g) {
 		if (this.from.find("raccoon")) {
 			context.speak("As you step towards the stairs, the raccoon rushes you.  Startled, you jump back!");
 		} else {
-			arc.Arc.prototype.follow.call(this, context);
+			Arc.prototype.follow.call(this, context);
 		}
 	};
 

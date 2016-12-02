@@ -1,3 +1,4 @@
+var _ = require('lodash');
 irregular_plurals = {
 	"man": "men",
 	"woman": "women",
@@ -31,3 +32,6 @@ String.prototype.capitalize = function() {
 }
 
 exports.noun_phrase_noun = np => np.split(/ /)[np.split(/ /).length -1];
+
+exports.comma_separated_list = l => 
+	_.slice(l,0,l.length-1).join(", ") + " and " + l[l.length-1];

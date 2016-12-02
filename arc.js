@@ -49,8 +49,14 @@ Arc.prototype.follow = function (context) {
 	}
 };
 
+
 Arc.prototype.traverse = function (context) {
 	context.speak((this.traversal || ("You go " + this.direction)) + ".\n");
+};
+
+Arc.prototype.set_traversal_message = function (str) {
+	this.traversal=str;
+	return this;
 };
 
 Arc.prototype.match = function (word) {

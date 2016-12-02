@@ -1,5 +1,5 @@
 Look noun should show more detail
-Maybe add one-shot adhocs?
+
 
 story:
 token
@@ -9,3 +9,4 @@ streetcar
 Active nouns.
 ticking
 
+Maybe add one-shot adhocs?
