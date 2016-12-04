@@ -1,5 +1,6 @@
-var _ = require('lodash');
-var grammar = require("./grammar.js")
+const _ = require('lodash');
+const grammar = require("./grammar.js")
+const arc = require("./arc.js");
 
 function Room(id, brief, description) {
 	this.id = id;
@@ -37,7 +38,6 @@ Room.prototype.describe = function (game, verbose) {
 	return s;
 };
 
-
 // normally this is just the static description of the room
 // but it may be state dependent.
 Room.prototype.get_description = function (game) {
@@ -58,13 +58,14 @@ Room.prototype.visible_exits = function (game) {
 };
 
 
-Room.prototype.add_arc = function (arc) {
-	this.arcs[arc.direction]=arc;
+Room.prototype.add_arc = function (a) {
+	this.arcs[a.direction]=a;
 };
 
 // find the arc, either by direction or by the noun of its name
 Room.prototype.has_arc = function (direction) {
 	return this.arcs[direction] ||
+		this.arcs[arc.expand_direction_abbreviation(direction)] ||
 		_.find(this.arcs, a => a.match(direction));
 };
 

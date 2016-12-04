@@ -3,7 +3,8 @@ const Player = require("./player.js").Player;
 const adhoc = require("./adhoc.js");
 const verbs = require("./verbs.js");
 const Verbs  = require("./verb.js").Verbs;
-const Arc  = require("./arc.js").Arc;
+const arc  = require("./arc.js");
+const Arc = arc.Arc;
 const util = require("./util.js");
 
 function Game () {
@@ -30,15 +31,29 @@ Game.prototype.add_room = function (room) {
 	return room;
 };
 
-Game.prototype.add_arc = function (np, direction, from_id, to_id, symmetric=true,hidden=false) {
-	var from = this.room(from_id);
-	var to = this.room(to_id);
-	var arc = new Arc(from, to, direction, np, hidden);
-	from.add_arc(arc);
-	if (symmetric) {
-		to.add_arc(arc.reverse_arc());
-	}
-	return arc;
+Game.prototype.add_arc = function (np, direction, from_id, to_id, msg=null) {
+	return new Arc(this.room(from_id),
+				   this.room(to_id),
+				   direction,
+				   np,
+				   msg);
+};
+
+Game.prototype.add_arc_pair = function (np, direction, from_id, to_id) {
+	var a = this.add_arc(np, direction, from_id, to_id);
+	var b = a.reverse_arc();
+	return [a,b];
+};
+
+
+// a transition arc is hidden, one-way, and has a message.  It has no associated np
+// It's used for movements (you might as well call them actions) that don't make
+// sense as associated with anything visible, e.g. WAIT
+Game.prototype.add_transition_arc = function (direction, from_id, to_id, msg) {
+	new Arc(this.room(from_id),
+			this.room(to_id),
+			direction,
+			msg);
 };
 
 Game.prototype.when = function (regexp) {
@@ -64,7 +79,7 @@ Game.prototype.find = function (np) {
 
 Game.prototype.interpret = function (input) {
 	var adhoc;
-	var arc;
+	var a;
 	var verb;
 
 	if (adhoc = _.find(this.adhocs, a => a.match(this,  input))) {
@@ -92,12 +107,12 @@ Game.prototype.interpret = function (input) {
 		return false;
 	}
 
-	if (arc = this.player.room.has_arc(word)) {
-		arc.follow(this);
+	if (a = this.player.room.has_arc(word)) {
+		a.follow(this);
 		return false;
 	}
 	
-	if (Arc.isDirection(word)) {
+	if (arc.isDirection(word)) {
 		this.speak("You can't go that way.");
 		return false;
 	}
@@ -108,9 +123,9 @@ Game.prototype.interpret = function (input) {
 				this.speak(verb.word + " where/which way?. Try again, say a little more");
 			} else {
 				var arg = tokens[1];
-				if (arc = this.player.room.has_arc(arg)) {
-					arc.follow(this);
-				} else if (Arc.isDirection(arg)) {
+				if (a = this.player.room.has_arc(arg)) {
+					a.follow(this);
+				} else if (arc.isDirection(arg)) {
 					this.speak("You can't " + verb.word + " in that direction.");
 				} else {
 					this.speak("Makes no sense.");

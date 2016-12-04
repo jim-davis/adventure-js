@@ -12,3 +12,6 @@ add_pair("left", "right");
 add_pair("in", "out");
 add_pair("north", "south");
 add_pair("east", "west");
+add_pair("left", "right");
+
+

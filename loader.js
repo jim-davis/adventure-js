@@ -59,37 +59,35 @@ function add_rooms(g) {
 
 
 function add_arcs(g) {
-	g.add_arc("walkway", "west", "sidewalk", "front_porch");
-	g.add_arc("sidewalk", "north", "sidewalk", "sidewalk")
-		.set_traversal_message("You walk a long way, but don't see anything interesting, so you turn around.");
+	g.add_arc_pair("walkway", "west", "sidewalk", "front_porch");
+	g.add_arc("sidewalk", "north", "sidewalk", "sidewalk",
+			  "You walk a long way, but don't see anything interesting, so you turn around.");
 
-	g.add_arc("sidewalk", "south", "sidewalk", "stop", false)
-		.set_traversal_message("You head south, and reach a bigger street, where you turn right.");
+	g.add_arc("sidewalk", "south", "sidewalk", "stop",
+			  "You head south, and reach a bigger street, where you turn right.");
 
-	g.add_arc("sidewalk", "east", "stop", "sidewalk", false)
-		.set_traversal_message("You head east, and when you see a familiar street you turn left");
+	g.add_arc("sidewalk", "east", "stop", "sidewalk",
+			  "You head east, and when you see a familiar street you turn left");
 
-	g.add_arc("door", "in", "front_porch", "ff");
-	g.add_arc("hallway", "west", "ff", "kitchen");
-	g.add_arc("flight of stairs", "down", "ff", "basement");
-	g.add_arc("door", "out", "paint_closet", "basement");
+	g.add_arc_pair("door", "in", "front_porch", "ff");
+	g.add_arc_pair("hallway", "west", "ff", "kitchen");
+	g.add_arc_pair("flight of stairs", "down", "ff", "basement");
+	g.add_arc_pair("door", "out", "paint_closet", "basement");
 
-	var a = new Arc(g.room("front_porch"), g.room("paint_closet"), "down", "hole");
-	a.enabled = function (game) {
-		return this.from.get_state("broken");
-	};
-	
+	var a = g.add_arc("hole", "down", "front_porch", "paint_closet",
+					  "you carefully climb down");
+
 	a.is_visible = function (game) {
 		return this.from.get_state("broken");
 	};
-	a.traversal = "You carefully climb down.";
+	a.enabled = function (game) {
+		return this.is_visible();
+	};
 
-	g.room("front_porch").add_arc(a);
 
+	g.add_arc_pair("door", "out", "kitchen", "back_porch");
 
-	g.add_arc("door", "out", "kitchen", "back_porch");
-
-	a = g.add_arc("couple of steps", "down", "back_porch", "patio");
+	[a,b] = g.add_arc_pair("couple of steps", "down", "back_porch", "patio");
 	a.follow = function (game) {
 		if (this.from.find("raccoon")) {
 			game.speak("As you step towards the stairs, the raccoon rushes you.  Startled, you jump back!");
@@ -98,19 +96,20 @@ function add_arcs(g) {
 		}
 	};
 
-	g.add_arc("", "wait", "stop", "stop1", false, true)
-	.set_traversal_message("You wait a while.  The traffic light turns green.  The streetcar gets closer.");
-	g.add_arc("sidewalk", "east", "stop1", "sidewalk", false)
-		.set_traversal_message("You stop waiting around and head back east.  When you see a familiar street you turn left and go up it.");
+	g.add_transition_arc("wait", "stop", "stop1",
+					 "You wait a while.  The traffic light turns green.  The streetcar gets closer.");
 
+	g.add_arc("sidewalk", "east", "stop1", "sidewalk",
+					  "You stop waiting around and head back east.  When you see a familiar street you turn left and go up it.");
 
-	g.add_arc("", "wait", "stop1", "stop2", false, true)
-	.set_traversal_message("You wait some more.  The streetcar pulls up.");
-	g.add_arc("sidewalk", "east", "stop2", "sidewalk", false)
-		.set_traversal_message("You walk away from the streetcar.  When you see a familiar street you turn left.");
+	g.add_transition_arc("wait", "stop1", "stop2", 
+					 "You wait some more.  The streetcar pulls up.");
 
-	g.add_arc("", "wait", "stop2", "stop", false, true)
-	.set_traversal_message("The streetcar departs without you.");
+	g.add_arc("sidewalk", "east", "stop2", "sidewalk",
+					  "You walk away from the streetcar.  When you see a familiar street you turn left.");
+
+	g.add_transition_arc("wait", "stop2", "stop", 
+					 "The streetcar departs without you.");
 
 	return g;
 }
