@@ -1,5 +1,5 @@
 // an Adhoc is just a pair of a predicate and an action.
-// The predicate is applied to (current) context and the current input line
+// The predicate is applied to (current) game and the current input line
 // If it is true, the action is executed.
 // The game has a list of adhocs.  Each time the user types
 // input, the entire set list is applied.  The first one to fire wins
@@ -10,12 +10,12 @@ function Adhoc (predicate, action) {
 	this.active = true;
 }
 
-Adhoc.prototype.match = function (context, input) {
-	return this.active && this.predicate.call(null, context, input);
+Adhoc.prototype.match = function (game, input) {
+	return this.active && this.predicate.call(null, game, input);
 };
 
-Adhoc.prototype.execute = function (context, input) {
-	this.action.call(this, context, input);
+Adhoc.prototype.execute = function (game, input) {
+	this.action.call(this, game, input);
 };
 
 
@@ -62,13 +62,13 @@ Builder.prototype.do = function (lambda) {
 
 // generates the lambda expression predicate
 Builder.prototype.predicate = function () {
-	return (context, input) => {
+	return (game, input) => {
 		return this.regexp.test(input) &&
 			(!this.state_predicate ||
-			 this.state_predicate.call(context, context)) &&
-			(!this.noun_in_room || context.player.room.find(this.noun_in_room)) &&
-			(!this.room_id || context.player.room.id == this.room_id) &&
-			(!this.noun_in_inventory || context.player.find(this.noun_in_inventory));
+			 this.state_predicate.call(game, game)) &&
+			(!this.noun_in_room || game.player.room.find(this.noun_in_room)) &&
+			(!this.room_id || game.player.room.id == this.room_id) &&
+			(!this.noun_in_inventory || game.player.find(this.noun_in_inventory));
 	};
 };
 		

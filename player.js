@@ -42,8 +42,8 @@ Player.prototype.goto = function (room) {
 	this.room = room;
 };
 
-Player.prototype.describe_current_room = function (context, verbose=false) {
-	var s = this.room.describe(context, verbose);
+Player.prototype.describe_current_room = function (game, verbose=false) {
+	var s = this.room.describe(game, verbose);
 	this.rooms_seen[this.room.id] = true;
 	return s;
 };

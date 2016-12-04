@@ -17,7 +17,7 @@ Arc.isDirection = function (pp) {
 	return Arc.directions.indexOf(pp) >= 0;
 };
 
-Arc.prototype.is_visible = function (context) {
+Arc.prototype.is_visible = function (game) {
 	return !this.hidden;
 };
 
@@ -32,28 +32,28 @@ Arc.prototype.describe = function () {
 	return "A " + this.noun_phrase + " leads " + this.direction;
 };
 
-Arc.prototype.enabled = function (context) {
+Arc.prototype.enabled = function (game) {
 	return true;
 };
 
-Arc.prototype.follow = function (context) {
-	if (this.enabled(context)) {
-		context.speak("\n");
-		this.traverse(context);
-		context.player.goto(this.to);
-		context.look();
+Arc.prototype.follow = function (game) {
+	if (this.enabled(game)) {
+		game.speak("\n");
+		this.traverse(game);
+		game.player.goto(this.to);
+		game.look();
 	} else {
-		if (this.is_visible(context)) {
-			context.speak("You can't");
+		if (this.is_visible(game)) {
+			game.speak("You can't");
 		} else {
-			context.speak("You can't go that way.");
+			game.speak("You can't go that way.");
 		}
 	}
 };
 
 
-Arc.prototype.traverse = function (context) {
-	context.speak((this.traversal || ("You go " + this.direction + ".")) + "\n");
+Arc.prototype.traverse = function (game) {
+	game.speak((this.traversal || ("You go " + this.direction + ".")) + "\n");
 };
 
 Arc.prototype.set_traversal_message = function (str) {

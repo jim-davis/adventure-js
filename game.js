@@ -1,5 +1,4 @@
 var _ = require('lodash');
-const Context = require("./context.js").Context;
 const Player = require("./player.js").Player;
 const adhoc = require("./adhoc.js");
 const verbs = require("./verbs.js");
@@ -10,7 +9,6 @@ const util = require("./util.js");
 function Game () {
 	this.player = new Player();
 	this.rooms = {};
-	this.context = new Context(this,this.player);
 	this.adhocs = [];
 }
 
@@ -53,7 +51,15 @@ Game.prototype.add_adhoc = function (adhoc) {
 };
 
 Game.prototype.speak = function (s) {
-	this.context.speak(s);
+	console.log(s);
+};
+
+Game.prototype.look = function (verbose=false) {
+	this.speak(this.player.describe_current_room(this, verbose));
+};
+
+Game.prototype.find = function (np) {
+	return this.player.find(np) || this.player.room.find(np);
 };
 
 Game.prototype.interpret = function (input) {
@@ -61,8 +67,8 @@ Game.prototype.interpret = function (input) {
 	var arc;
 	var verb;
 
-	if (adhoc = _.find(this.adhocs, a => a.match(this.context,  input))) {
-		adhoc.execute(this.context, input);
+	if (adhoc = _.find(this.adhocs, a => a.match(this,  input))) {
+		adhoc.execute(this, input);
 		return false;
 	}
 	
@@ -78,8 +84,8 @@ Game.prototype.interpret = function (input) {
 		if (tokens.length == 1) {
 			this.speak("You can't do that.");
 		} else if (room = this.rooms[tokens[1]]) {
-			this.context.player.goto(room);
-			this.context.look();
+			this.player.goto(room);
+			this.look();
 		} else {
 			this.speak("No such place.");
 		}
@@ -87,7 +93,7 @@ Game.prototype.interpret = function (input) {
 	}
 
 	if (arc = this.player.room.has_arc(word)) {
-		arc.follow(this.context);
+		arc.follow(this);
 		return false;
 	}
 	
@@ -103,7 +109,7 @@ Game.prototype.interpret = function (input) {
 			} else {
 				var arg = tokens[1];
 				if (arc = this.player.room.has_arc(arg)) {
-					arc.follow(this.context);
+					arc.follow(this);
 				} else if (Arc.isDirection(arg)) {
 					this.speak("You can't " + verb.word + " in that direction.");
 				} else {
@@ -111,20 +117,20 @@ Game.prototype.interpret = function (input) {
 				}
 			}
 		} else if (verb.isIntransitive()) {
-			verb.execute(this.context);
+			verb.execute(this);
 		} else if (tokens.length == 1) {
 			this.speak(verb.word + " what?. Try again, say a little more");
 		} else {
 			
 			var arg = tokens[1];
-			var noun = this.context.find(arg);
+			var noun = this.find(arg);
 			if (! noun) {
 				this.speak(util.pick_random(["You don't have that.",
 												"I don't see any " + arg + " here"]));
 			} else {
 				if ( verb.selects_for(noun)) {
 					// This might be a better place to put the adhoc verb
-					verb.execute(this.context, noun);
+					verb.execute(this, noun);
 				} else {
 					this.speak("You can't " + verb.word + " that");
 				} 

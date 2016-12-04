@@ -27,7 +27,7 @@ function interaction_loop (game) {
 		}
 	});
 
-	game.context.look();
+	game.look();
 	rl.prompt();
 };
 

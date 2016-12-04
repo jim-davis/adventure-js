@@ -12,17 +12,17 @@ function Room(id, brief, description) {
 }
 
 // return the string that describes the room from player's perspective
-Room.prototype.describe = function (context, verbose) {
-	var s = (context.player.has_seen(this) && ! verbose) ? 
+Room.prototype.describe = function (game, verbose) {
+	var s = (game.player.has_seen(this) && ! verbose) ? 
 		this.brief : 
-		"You are " + this.preposition() + " " + this.get_description(context);
+		"You are " + this.preposition() + " " + this.get_description(game);
 
 	if (this.contents.length > 0) {
 		s += "\nYou see:\n";
 		s += _.map(this.contents, n => " " + n.description).join("\n");
 	}
 
-	if (this.visible_exits(context)) {
+	if (this.visible_exits(game)) {
 		var arcs_by_noun = _.groupBy(this.visible_exits(), a => a.noun_phrase);
 		s += "\n\n" + _.map(Object.keys(arcs_by_noun),
 			  n => { var arcs = arcs_by_noun[n];
@@ -40,7 +40,7 @@ Room.prototype.describe = function (context, verbose) {
 
 // normally this is just the static description of the room
 // but it may be state dependent.
-Room.prototype.get_description = function (context) {
+Room.prototype.get_description = function (game) {
 	return this.description;
 };
 
@@ -53,8 +53,8 @@ Room.prototype.set_state = function (s, v) {
 };
 
 // the arcs leading out that are currently visible
-Room.prototype.visible_exits = function (context) {
-	return _.filter(this.arcs, a => a.is_visible(context));
+Room.prototype.visible_exits = function (game) {
+	return _.filter(this.arcs, a => a.is_visible(game));
 };
 
 

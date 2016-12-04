@@ -76,11 +76,11 @@ function add_arcs(g) {
 	g.add_arc("door", "out", "paint_closet", "basement");
 
 	var a = new Arc(g.room("front_porch"), g.room("paint_closet"), "down", "hole");
-	a.enabled = function (context) {
+	a.enabled = function (game) {
 		return this.from.get_state("broken");
 	};
 	
-	a.is_visible = function (context) {
+	a.is_visible = function (game) {
 		return this.from.get_state("broken");
 	};
 	a.traversal = "You carefully climb down.";
@@ -91,11 +91,11 @@ function add_arcs(g) {
 	g.add_arc("door", "out", "kitchen", "back_porch");
 
 	a = g.add_arc("couple of steps", "down", "back_porch", "patio");
-	a.follow = function (context) {
+	a.follow = function (game) {
 		if (this.from.find("raccoon")) {
-			context.speak("As you step towards the stairs, the raccoon rushes you.  Startled, you jump back!");
+			game.speak("As you step towards the stairs, the raccoon rushes you.  Startled, you jump back!");
 		} else {
-			Arc.prototype.follow.call(this, context);
+			Arc.prototype.follow.call(this, game);
 		}
 	};
 
@@ -124,62 +124,62 @@ function add_actions(g) {
 
 function add_porch_smashing(g) {
 	g.when(/jump/).in("front_porch")
-		.state(context => !context.player.room.get_state("broken"))
-		.do(context => {
-			context.player.room.set_state("broken", true);
-			context.speak("The force of your jumping causes the already fragile porch to collapse!\n");
-			context.look();
+		.state(game => !game.player.room.get_state("broken"))
+		.do(game => {
+			game.player.room.set_state("broken", true);
+			game.speak("The force of your jumping causes the already fragile porch to collapse!\n");
+			game.look();
 		});
 
 	// synonyms.  I hate how much duplication there is for each synonym
 	g.when(/smash/).in("front_porch")
-		.state(context => !context.player.room.get_state("broken"))
-		.do(context => {
-			context.player.room.set_state("broken", true);
-			context.speak("You smash the porch!\n");
-			context.look();
+		.state(game => !game.player.room.get_state("broken"))
+		.do(game => {
+			game.player.room.set_state("broken", true);
+			game.speak("You smash the porch!\n");
+			game.look();
 	});
 
 	g.when(/stomp/).in("front_porch")
-		.state(context => !context.player.room.get_state("broken"))
-		.do(context => {
-			context.player.room.set_state("broken", true);
-			context.speak("You stomp once, twice, three times.  The porch collapses!\n");
-			context.look();
+		.state(game => !game.player.room.get_state("broken"))
+		.do(game => {
+			game.player.room.set_state("broken", true);
+			game.speak("You stomp once, twice, three times.  The porch collapses!\n");
+			game.look();
 		});
 
 	g.when(/break/).in("front_porch")
-		.state(context => !context.player.room.get_state("broken"))
-		.do(context => {
-			context.player.room.set_state("broken", true);
-			context.speak("You stomp and kick, and the porch breaks!\n");
-			context.look();
+		.state(game => !game.player.room.get_state("broken"))
+		.do(game => {
+			game.player.room.set_state("broken", true);
+			game.speak("You stomp and kick, and the porch breaks!\n");
+			game.look();
 	});
 
 	g.when(/kick/).in("front_porch")
-		.state(context => !context.player.room.get_state("broken"))
-		.do(context => {
-			context.player.room.set_state("broken", true);
-			context.speak("Two or three hard kicks, and the porch collapses!\n");
-			context.look();
+		.state(game => !game.player.room.get_state("broken"))
+		.do(game => {
+			game.player.room.set_state("broken", true);
+			game.speak("Two or three hard kicks, and the porch collapses!\n");
+			game.look();
 		});
 }
 
 function add_raccoon_fight(g) {
 	g.when(/throw wand/).at("raccoon").holding("wand")
-		.do((context) => {
-			var noun = context.find("wand");
-			context.player.room.add_item(context.player.remove_item(noun));
-			context.speak("The raccoon deftly grabs the wand and waves it at you, chittering a spell in Raccoonian.  You see a flash of light, and then all vanishes.");
-			context.player.goto(g.room("basement"));
+		.do((game) => {
+			var noun = game.find("wand");
+			game.player.room.add_item(game.player.remove_item(noun));
+			game.speak("The raccoon deftly grabs the wand and waves it at you, chittering a spell in Raccoonian.  You see a flash of light, and then all vanishes.");
+			game.player.goto(g.room("basement"));
 		});
 
 	g.when(/throw cheese/).at("raccoon").holding("cheese")
-		.do((context) => {
-			var noun = context.find("cheese");
-			context.player.remove_item(noun);
-			context.player.room.remove_item(context.player.room.find("raccoon"));
-			context.speak("The raccoon takes a bite of the cheese, then spits it out in horror and shock!  Aughh, cheese!  It runs to the corner of the patio, climbs the fence, and quickly scurries away");
+		.do((game) => {
+			var noun = game.find("cheese");
+			game.player.remove_item(noun);
+			game.player.room.remove_item(game.player.room.find("raccoon"));
+			game.speak("The raccoon takes a bite of the cheese, then spits it out in horror and shock!  Aughh, cheese!  It runs to the corner of the patio, climbs the fence, and quickly scurries away");
 		});
 }
 

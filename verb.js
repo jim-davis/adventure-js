@@ -31,8 +31,8 @@ Verb.prototype.selects_for_category = function (cat) {
 	return this.categories && this.categories.indexOf(cat) >= 0;
 };
 	
-Verb.prototype.execute = function (context, noun) {
-	context.speak("Nothing special happens");
+Verb.prototype.execute = function (game, noun) {
+	game.speak("Nothing special happens");
 };
 
 function Motion (word) {
