@@ -5,7 +5,6 @@ const noun = require("./noun.js");
 const c = require("./categories.js");
 const Room = room.Room;
 const Noun = noun.Noun;
-const Nouns = noun.Nouns;
 const Arc = arc.Arc;
 
 function add_rooms(g) {

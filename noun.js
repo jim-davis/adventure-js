@@ -2,8 +2,6 @@ var _ = require('lodash');
 const grammar = require ("./grammar.js");
 const dictionary = require ("./dictionary.js");
 
-const Nouns = new dictionary.Dictionary();
-
 function Noun (word, categories, description, detail) {
 	this.word = word;
 	this.synonyms = [];
@@ -11,7 +9,6 @@ function Noun (word, categories, description, detail) {
 	this.description = description; 
 	this.detail = detail;
 	this.state = {};
-	Nouns.add_word(this);
 }
 
 Noun.prototype.match = function (np) {
@@ -41,4 +38,3 @@ Noun.prototype.default_verb = function () {
 };
 
 exports.Noun = Noun;
-exports.Nouns = Nouns;
