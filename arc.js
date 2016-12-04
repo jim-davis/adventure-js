@@ -17,7 +17,7 @@ function Arc (from, to, direction, noun_phrase, traversal=null) {
 	this.to=to;
 	this.direction=direction;
 	this.noun_phrase=noun_phrase;
-	this.noun = grammar.noun_phrase_noun(noun_phrase);
+	this.noun = this.noun_phrase && grammar.noun_phrase_noun(noun_phrase);
 	this.traversal = traversal;
 	this.hidden = noun_phrase == null || noun_phrase.length == 0;
 	from.add_arc(this);

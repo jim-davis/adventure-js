@@ -3,7 +3,6 @@ Look noun should show more detail
 
 story:
 token
-wait
 streetcar
 
 Active nouns.

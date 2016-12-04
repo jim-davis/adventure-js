@@ -8,56 +8,52 @@ const Noun = noun.Noun;
 const Arc = arc.Arc;
 
 function add_rooms(g) {
-	g.add_room(new Room("sidewalk","sidewalk in front of a house",
-						"a city sidewalk in Toronto.  Passing traffic makes it unsafe to cross the street here.")).
-		set_supporter(true);
 
-	var p = g.add_room(new Room("front_porch", "porch", 
-								"the front porch of a house.  The porch is painted green and purple, but the paint is peeling off the steps.  The rails are partially rotten and look flimsy.  In fact the whole thing looks like it would fall apart with one or two hard kicks.  You better walk carefully."))
-		.set_supporter(true);
+	g.make_room("sidewalk","sidewalk in front of a house",
+						"a city sidewalk in Toronto.  Passing traffic makes it unsafe to cross the street here.", "on");
+
+	var p = g.make_room("front_porch", "porch", "on", 
+						"the front porch of a house.  The porch is painted green and purple, but the paint is peeling off the steps.  The rails are partially rotten and look flimsy.  In fact the whole thing looks like it would fall apart with one or two hard kicks.  You better walk carefully.", "on");
 	p.get_description = function () {
 		return this.get_state("broken") ?
 			"the remains of the front porch.  The rails have fallen off, the boards are cracked and broken, and what's left looks like it might collapse at any second." : this.description;
 	};
 
-	g.add_room(new Room("ff", "first floor",
-						"the first floor of the house"))
+	g.make_room("ff", "first floor",
+				"the first floor of the house")
 		.add_item(new Noun("wand", [c.LIGHTABLE, c.MOVEABLE], "a slender wand of bamboo, 25 centimeters long"))
 		.add_item(new Noun("book", [c.LEGIBLE, c.MOVEABLE], "a thin paperback book"));
 
-	g.add_room(new Room("kitchen", "kitchen", "the kitchen")).
-		add_item(new Noun("cheese", [c.EDIBLE, c.MOVEABLE], "a block of Cheddar cheese"));
+	g.make_room("kitchen", "kitchen", "the kitchen")
+		.add_item(new Noun("cheese", [c.EDIBLE, c.MOVEABLE], "a block of Cheddar cheese"));
 
-	g.add_room(new Room("basement", "basement", "a cluttered basement, full of old furniture, discarded shoes, a washer and dryer, and a worktable.")).
-		add_item(new Noun("flashlight", [c.LIGHTABLE, c.MOVEABLE], "flashlight", "a flashlight"));
+	g.make_room("basement", "basement", "a cluttered basement, full of old furniture, discarded shoes, a washer and dryer, and a worktable.")
+		.add_item(new Noun("flashlight", [c.LIGHTABLE, c.MOVEABLE], "flashlight", "a flashlight"));
 
-	g.add_room(new Room("paint_closet", "paint closet", "a tiny closet, full of cans of most-used paint, paint brushes, and some broken lightbulbs"));
+	g.make_room("paint_closet", "paint closet", "a tiny closet, full of cans of most-used paint, paint brushes, and some broken lightbulbs");
 
-	g.add_room(new Room("back_porch", "porch", "a small porch"))
-		.set_supporter(true)
+	g.make_room("back_porch", "porch", "a small porch", "on")
 		.add_item(new Noun("raccoon", [], "a raccoon"));
 
-	g.add_room(new Room("patio", "patio", "a small patio.  The ground is covered in stone tiles"))
-		.set_supporter(true);
+	g.make_room("patio", "patio", 
+				"a small patio.  The ground is covered in stone tiles",
+				"on");
 
+	g.make_room("stop", "streetcar stop",
+				"the corner of two big streets.  The light is red in both directions, you better not cross.\nIn the distance you see a streetcar approaching", "at");
 
-	g.add_room(new Room("stop", "streetcar stop",
-						"the corner of two big streets.  The light is red in both directions, you better not cross.\nIn the distance you see a streetcar approaching."))
-		.set_supporter(true);	// on?  at?
+	g.make_room("stop1", "streetcar stop",
+				"the corner of two big streets.  The light is green, you could cross the street now if you wanted.  The streetcar is getting closer.", "at");
 
-	g.add_room(new Room("stop1", "streetcar stop",
-						"the corner of two big streets.  The light is green, you could cross the street now if you wanted.  The streetcar is getting closer."))
-		.set_supporter(true);	// on?  at?
+	g.make_room("stop2", "streetcar stop",
+				"the corner of two big streets.  The streetcar is here, you could board it.",
+				"at");
 
-	g.add_room(new Room("stop2", "streetcar stop",
-						"the corner of two big streets.  The streetcar is here, you could board it."))
-		.set_supporter(true);	// on?  at?
-
-
+	g.make_room("streetcar", "streetcar",
+				"the streetcar", "riding");
+						
 	return g;
-}
-
-
+};
 function add_arcs(g) {
 	g.add_arc_pair("walkway", "west", "sidewalk", "front_porch");
 	g.add_arc("sidewalk", "north", "sidewalk", "sidewalk",
@@ -110,6 +106,9 @@ function add_arcs(g) {
 
 	g.add_transition_arc("wait", "stop2", "stop", 
 					 "The streetcar departs without you.");
+
+	g.add_transition_arc("board", "stop2", "streetcar",
+						 "You step into the streetcar");
 
 	return g;
 }

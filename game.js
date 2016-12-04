@@ -5,6 +5,7 @@ const verbs = require("./verbs.js");
 const Verbs  = require("./verb.js").Verbs;
 const arc  = require("./arc.js");
 const Arc = arc.Arc;
+const Room = require("./room.js").Room;
 const util = require("./util.js");
 
 function Game () {
@@ -31,6 +32,10 @@ Game.prototype.add_room = function (room) {
 	return room;
 };
 
+Game.prototype.make_room = function (id, brief, description, preposition) {
+	return this.add_room(new Room(id, brief, description, preposition));
+};
+
 Game.prototype.add_arc = function (np, direction, from_id, to_id, msg=null) {
 	return new Arc(this.room(from_id),
 				   this.room(to_id),
@@ -53,6 +58,7 @@ Game.prototype.add_transition_arc = function (direction, from_id, to_id, msg) {
 	new Arc(this.room(from_id),
 			this.room(to_id),
 			direction,
+			null,
 			msg);
 };
 

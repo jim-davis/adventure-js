@@ -2,11 +2,11 @@ const _ = require('lodash');
 const grammar = require("./grammar.js")
 const arc = require("./arc.js");
 
-function Room(id, brief, description) {
+function Room(id, brief, description, preposition="in") {
 	this.id = id;
 	this.brief = brief;
 	this.description=description;
-	this.supporter = false;
+	this.preposition = preposition;
 	this.arcs = {};
 	this.contents = [];
 	this.state = {};
@@ -16,7 +16,7 @@ function Room(id, brief, description) {
 Room.prototype.describe = function (game, verbose) {
 	var s = (game.player.has_seen(this) && ! verbose) ? 
 		this.brief : 
-		"You are " + this.preposition() + " " + this.get_description(game);
+		"You are " + this.preposition + " " + this.get_description(game);
 
 	if (this.contents.length > 0) {
 		s += "\nYou see:\n";
@@ -90,21 +90,6 @@ Room.prototype.remove_item = function (noun) {
 		return noun;
 	}
 }
-
-// If a room is a "supporter" it supports the player, so
-// we say you are "on" the room not "in" the room.
-// So "on the stairs", "on the sidewalk", but "in the living room"
-Room.prototype.set_supporter = function (b) {
-	this.supporter = b;
-	return this;
-};
-
-// the preposition to use when describing the players
-// relation to the room: usually it is "in" but it could be "on"
-Room.prototype.preposition = function () {
-	return this.supporter ? "on" : "in";
-};
-
 
 // the the Noun in the room
 Room.prototype.find = function (np) {
