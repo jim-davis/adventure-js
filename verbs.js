@@ -21,8 +21,13 @@ new Verb("drop",  		 [c.ANY]).
 
 new Verb("eat",   		 [c.EDIBLE]).
 	execute = function (game, noun) {
+		if (game.player.has_item(noun)) {
+			game.player.remove_item(noun);
+		}
+		if (game.player.room.has_item(noun)) {
+			game.player.room.remove_item(noun);
+		}
 		game.speak("Yummy");
-		// TODO destroy the item
 	};
 
 new Verb("extinguish", 	 [c.LIGHTABLE]); // must be lit
