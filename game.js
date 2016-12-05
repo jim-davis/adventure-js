@@ -137,12 +137,13 @@ Game.prototype.interpret = function (input) {
 					this.speak("Makes no sense.");
 				}
 			}
-		} else if (verb.isIntransitive()) {
-			verb.execute(this);
 		} else if (tokens.length == 1) {
-			this.speak(verb.word + " what?. Try again, say a little more");
+			if  (verb.isIntransitive()) {
+				verb.execute(this);
+			} else {
+				this.speak(verb.word + " what?. Try again, say a little more");
+			}
 		} else {
-			
 			var arg = tokens[1];
 			var noun = this.find(arg);
 			if (! noun) {

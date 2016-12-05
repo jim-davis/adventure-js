@@ -1,4 +1,5 @@
 exports.ANY = "*";
+exports.INTRANSITIVE = null;
 exports.BREAKABLE = "breakable";
 exports.CONTAINER = "container";
 exports.DOOR      = "door";

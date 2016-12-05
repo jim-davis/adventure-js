@@ -9,9 +9,10 @@ Verbs.categorized_for = function (cat) {
 	return _.filter(this.all(), v => v.selects_for_category(cat));
 };
 
-function Verb (word, categories, predicate) {
+function Verb (word, categories, execute) {
 	this.word = word;
 	this.categories = categories;
+	this.execute = execute;
 	Verbs.add_word(this);
 }
 
@@ -20,7 +21,7 @@ Verb.prototype.conjugate = function (plural) {
 };
 
 Verb.prototype.isIntransitive = function () {
-	return this.categories == null;
+	return this.categories == null || this.categories.indexOf(c.INTRANSITIVE) >= 0;
 }
 
 Verb.prototype.selects_for = function (noun) {

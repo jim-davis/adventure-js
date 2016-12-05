@@ -20,7 +20,7 @@ Room.prototype.describe = function (game, verbose) {
 
 	if (this.contents.length > 0) {
 		s += "\nYou see:\n";
-		s += _.map(this.contents, n => " " + n.description).join("\n");
+		s += _.map(this.contents, n => " " + n.indefinite_article() + " " + n.description).join("\n");
 	}
 
 	if (this.visible_exits(game)) {

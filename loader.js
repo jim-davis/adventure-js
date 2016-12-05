@@ -21,19 +21,23 @@ function add_rooms(g) {
 
 	g.make_room("ff", "first floor",
 				"the first floor of the house")
-		.add_item(new Noun("wand", [c.LIGHTABLE, c.MOVEABLE], "a slender wand of bamboo, 25 centimeters long"))
-		.add_item(new Noun("book", [c.LEGIBLE, c.MOVEABLE], "a thin paperback book"));
+		.add_item(new Noun("wand", [c.LIGHTABLE, c.MOVEABLE], "slender wand of bamboo, 25 centimeters long",
+						  "A closer look shows that one end is lightly charred, and a few fine cracks run a few centimeters from the end."))
+		.add_item(new Noun("book", [c.LEGIBLE, c.MOVEABLE], "thin paperback book",
+						  "The cover has been partially damaged, and is hard to read, but says something like \"The art and ..of Light...\".  It shows a long-haired, be-spectaled old man holding a strange jar in one hand, and a large key in the other.  You'll probably have to read it to learn more"));
 
 	g.make_room("kitchen", "kitchen", "the kitchen")
-		.add_item(new Noun("cheese", [c.EDIBLE, c.MOVEABLE], "a block of Cheddar cheese"));
+		.add_item(new Noun("cheese", [c.EDIBLE, c.MOVEABLE], "block of cheese", "It's Cheddar cheese, two or three years old."));
 
 	g.make_room("basement", "basement", "a cluttered basement, full of old furniture, discarded shoes, a washer and dryer, and a worktable.")
-		.add_item(new Noun("flashlight", [c.LIGHTABLE, c.MOVEABLE], "flashlight", "a flashlight"));
+		.add_item(new Noun("flashlight", [c.LIGHTABLE, c.MOVEABLE], "flashlight",
+						   "It's made of a dark metal, and looks pretty tough."));
 
 	g.make_room("paint_closet", "paint closet", "a tiny closet, full of cans of most-used paint, paint brushes, and some broken lightbulbs");
 
 	g.make_room("back_porch", "porch", "a small porch", "on")
-		.add_item(new Noun("raccoon", [], "a raccoon"));
+		.add_item(new Noun("raccoon", [], "raccoon",
+						  "The raccoon stands up on its hind legs and shakes its tiny fist at you in a menacing way.  Its eyes gleam with sinister intent."));
 
 	g.make_room("patio", "patio", 
 				"a small patio.  The ground is covered in stone tiles",

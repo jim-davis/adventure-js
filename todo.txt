@@ -1,6 +1,3 @@
-Look noun should show more detail
-
-
 story:
 token
 streetcar
