@@ -4,7 +4,6 @@ const dictionary = require ("./dictionary.js");
 
 function Noun (word, categories, description, detail) {
 	this.word = word;
-	this.synonyms = [];
 	this.categories = categories;
 	this.description = description; 
 	this.detail = detail;
@@ -12,7 +11,7 @@ function Noun (word, categories, description, detail) {
 }
 
 Noun.prototype.match = function (np) {
-	return this.word == np || this.synonyms.indexOf(np) >= 0;
+	return this.word == np;
 }
 
 Noun.prototype.has_category = function (c) {
@@ -20,7 +19,6 @@ Noun.prototype.has_category = function (c) {
 }
 
 Noun.prototype.definiteNP = function () {
-	// HMMM.  Is this right, if player used a synonym?
 	return "the " + this.word;
 };
 
