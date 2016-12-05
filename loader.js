@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const Game = require ("./game.js").Game;
 const room = require ("./room.js");
 const arc = require("./arc.js");
@@ -53,11 +54,48 @@ function add_rooms(g) {
 				"the corner of two big streets.  The streetcar is here, you could board it.",
 				"at");
 
-	g.make_room("streetcar", "streetcar",
-				"the streetcar", "riding");
-						
+	g.make_room("bloor@bathurst", "the corner of Bloor and Bathurst",
+				"the corner of Bloor and Bathurst, in front of Honest Eds department store", "on");
+
 	return g;
-};
+}
+
+function add_streetcar_route(g) {
+	var riding_id;
+	var stop_id = null;
+	_.forEach(["Ulster Street", "Harbord Street", "Bloor Street"],
+			  (crossstreet, idx, col) => {
+				  riding_id = "streetcar" + idx;
+
+				  g.make_room(riding_id, "streetcar",
+							  "the streetcar, heading north up Bathurst Street.  Next stop: " + crossstreet,
+							  "riding");
+
+				  if (stop_id) {
+					  g.add_transition_arc("wait", stop_id, riding_id, "the streetcar begins moving again");
+				  }
+
+				  g.add_transition_arc("exit", riding_id, riding_id, 
+									   (idx == 0 ? 
+									   "You try to get off, but a car comes speeding up the road, ignoring the open door.  The TTC driver blares this horm in anger, but it's still not safe to get off" : 
+									   "You try to get off, but the streetcar is too crowded.  Though you push and shove, the doors close before you can get off."));
+
+				  stop_id = "streetcar@" + crossstreet;
+				  
+				  g.make_room(stop_id, "stopped at " + crossstreet,
+							  "the streetcar, stopped at " + crossstreet, "on");
+
+				  g.add_transition_arc("wait", riding_id, stop_id, 
+									   "the streetcar continues north, then stops. " +
+									   (idx == 0 ? "  Many people get on." : "  Even more people get on."));
+				  });
+				  
+	g.add_transition_arc("board", "stop2", "streetcar0",
+						 "You step into the streetcar, and it heads north");
+	
+	g.add_transition_arc("exit", stop_id, "bloor@bathurst", "Pushing hard, you finally force your way off the streetcar");
+}
+
 function add_arcs(g) {
 	g.add_arc_pair("walkway", "west", "sidewalk", "front_porch");
 	g.add_arc("sidewalk", "north", "sidewalk", "sidewalk",
@@ -110,9 +148,6 @@ function add_arcs(g) {
 
 	g.add_transition_arc("wait", "stop2", "stop", 
 					 "The streetcar departs without you.");
-
-	g.add_transition_arc("board", "stop2", "streetcar",
-						 "You step into the streetcar");
 
 	return g;
 }
@@ -188,7 +223,9 @@ function add_raccoon_fight(g) {
 exports.create = () => {
 	var g = new Game();
 	add_rooms(g);
+    add_streetcar_route(g);
 	add_arcs(g);
+
 	add_actions(g);
 
 	g.goto("sidewalk");

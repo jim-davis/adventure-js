@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 const grammar = require ("./grammar.js");
 const dictionary = require ("./dictionary.js");
 
