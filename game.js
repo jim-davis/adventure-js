@@ -79,27 +79,40 @@ Game.prototype.look = function (verbose=false) {
 	this.speak(this.player.describe_current_room(this, verbose));
 };
 
-Game.prototype.find = function (np) {
-	return this.player.find(np) || this.player.room.find(np);
+Game.prototype.find_noun = function (np) {
+	return this.player.find_noun(np) || this.player.room.find_noun(np);
 };
 
+Game.prototype.do_noun_with_adhoc_verb = function (input)  {
+	var f =  _(this.player.nouns_in_reach())
+		.map(n => n.adhoc(input))
+		.filter()
+		.first();
+	return f && f.call(null, this, input);
+};
+
+// return true to exit
 Game.prototype.interpret = function (input) {
 	var adhoc;
-	var a;
-	var verb;
 
+	// Try adhoc matches first
 	if (adhoc = _.find(this.adhocs, a => a.match(this,  input))) {
 		adhoc.execute(this, input);
 		return false;
 	}
 	
+	// not adhoc, so try to parse
+
 	var tokens = input.split(" ");
 	var word = tokens[0];
+	var a;
+	var verb;
 
 	if (word == "quit") {
 		return true;
 	}
 
+	// goto is a hack for debugging
 	if (word == "goto") {
 		// useful when debugging
 		if (tokens.length == 1) {
@@ -113,55 +126,73 @@ Game.prototype.interpret = function (input) {
 		return false;
 	}
 
+	// arc name, e.g. north
 	if (a = this.player.room.has_arc(word)) {
 		a.follow(this);
 		return false;
 	}
 	
-	if (arc.isDirection(word)) {
-		this.speak("You can't go that way.");
+	// nouns with special verbs
+	if (this.do_noun_with_adhoc_verb(input)) {
 		return false;
 	}
 
+	// verbs are the most generic (least easily customized) so they come last
 	if (verb = Verbs.find(word)) {
-		if (verb.isMotion) {
-			if (tokens.length == 1) {
+		if (verb.isMotion) {	// go, walk, crawl etc
+			if (tokens.length == 1) { 
+				// all motion verbs need an argument
 				this.speak(verb.word + " where/which way?. Try again, say a little more");
 			} else {
+				// and the argument must be the name of an arc
 				var arg = tokens[1];
 				if (a = this.player.room.has_arc(arg)) {
 					a.follow(this);
-				} else if (arc.isDirection(arg)) {
-					this.speak("You can't " + verb.word + " in that direction.");
 				} else {
-					this.speak("Makes no sense.");
+					// make the error message meaningful
+					if (arc.isDirection(arg)) {
+						this.speak("You can't " + verb.word + " in that direction.");
+					} else {
+						this.speak("Makes no sense.");
+					}
 				}
 			}
-		} else if (tokens.length == 1) {
-			if  (verb.isIntransitive()) {
-				verb.execute(this);
-			} else {
-				this.speak(verb.word + " what?. Try again, say a little more");
-			}
 		} else {
-			var arg = tokens[1];
-			var noun = this.find(arg);
-			if (! noun) {
-				this.speak(util.pick_random(["You don't have that.",
-												"I don't see any " + arg + " here"]));
-			} else {
-				if ( verb.selects_for(noun)) {
-					// This might be a better place to put the adhoc verb
-					verb.execute(this, noun);
+			// all other verbs (and junk)
+			if (tokens.length == 1) {
+				// no arg.  So it better be intransitive
+				if  (verb.isIntransitive()) {
+					verb.execute(this);
 				} else {
-					this.speak("You can't " + verb.word + " that");
-				} 
+					this.speak(verb.word + " what?. Try again, say a little more");
+				}
+			} else {
+				var arg = tokens[1];
+				var noun = this.find_noun(arg);
+				if (! noun) {
+					this.speak(util.pick_random(["You don't have that.",
+												 "I don't see any " + arg + " here"]));
+				} else {
+					if ( verb.selects_for(noun)) {
+						// This might be a better place to put the adhoc verb
+						verb.execute(this, noun);
+					} else {
+						this.speak("You can't " + verb.word + " that");
+					} 
+				}
 			}
 		}
 		return false;
 	} 
 
-	this.speak("You can't do that.");
+	// if we get here, we didn't understand the utterance
+	
+	if (arc.isDirection(word)) {
+		this.speak("You can't go that way.");
+	} else {
+		this.speak("You can't do that.");
+	}
+	
 	return false;
 };
 

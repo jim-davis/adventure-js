@@ -2,16 +2,18 @@ const _ = require('lodash');
 const Game = require ("./game.js").Game;
 const room = require ("./room.js");
 const arc = require("./arc.js");
-const noun = require("./noun.js");
+const Noun = require("./noun.js").Noun;
 const c = require("./categories.js");
 const Room = room.Room;
-const Noun = noun.Noun;
 const Arc = arc.Arc;
+
+const Dynamite = require("./dynamite.js").Dynamite;
 
 function add_rooms(g) {
 
 	g.make_room("sidewalk","sidewalk in front of a house",
-						"a city sidewalk in Toronto.  Passing traffic makes it unsafe to cross the street here.", "on");
+						"a city sidewalk in Toronto.  Passing traffic makes it unsafe to cross the street here.", "on")
+	.add_item(new Dynamite());
 
 	var p = g.make_room("front_porch", "porch", "on", 
 						"the front porch of a house.  The porch is painted green and purple, but the paint is peeling off the steps.  The rails are partially rotten and look flimsy.  In fact the whole thing looks like it would fall apart with one or two hard kicks.  You better walk carefully.", "on");
@@ -159,6 +161,7 @@ function add_actions(g) {
 }
 
 function add_porch_smashing(g) {
+	// jump, smash, stomp, break, kick porch
 	g.when(/jump/).in("front_porch")
 		.state(game => !game.player.room.get_state("broken"))
 		.do(game => {

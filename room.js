@@ -92,7 +92,7 @@ Room.prototype.remove_item = function (noun) {
 }
 
 // the the Noun in the room
-Room.prototype.find = function (np) {
+Room.prototype.find_noun = function (np) {
 	return _.find(this.contents, n => n.match(np));
 };
 

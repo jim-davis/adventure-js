@@ -24,7 +24,7 @@ Player.prototype.remove_item = function (noun) {
 };
 
 
-Player.prototype.find = function (np) {
+Player.prototype.find_noun = function (np) {
 	return _.find(this.inventory, n => n.match(np));
 };
 
@@ -50,6 +50,10 @@ Player.prototype.describe_current_room = function (game, verbose=false) {
 
 Player.prototype.has_seen = function (room) {
 	return this.rooms_seen[room.id] == true;
+};
+
+Player.prototype.nouns_in_reach = function () {
+	return this.inventory.concat(this.room.contents);
 };
 
 exports.Player = Player;

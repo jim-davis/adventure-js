@@ -14,13 +14,22 @@ function Dynamite () {
 						   } else {
 							   game.speak("The button makes a faint click.\nThe rod begins to glow dimly.  A small rectangle on the side of rod shows the number 5 in bright yellow dots.");
 							   this.set_state("pushed", true);
-							   this.set_state("countdown", 5);
+							   this.set_state("countdown", 4);
 						   }
+						   return true;
+					   } else {
+						   game.speak("You have to pick it up first.");
 						   return true;
 					   }
 				   });
 }
 
 Dynamite.prototype = new ActiveNoun();
+
+Dynamite.prototype.get_detail = function () {
+	return this.get_state("pushed") ?
+		"A small rectangle on the side of the rod shows the number " + this.get_state("countdown") :
+		"At one end there's a push button.";
+};
 
 exports.Dynamite = Dynamite;
