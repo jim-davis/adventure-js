@@ -8,11 +8,28 @@ const Arc = arc.Arc;
 const Room = require("./room.js").Room;
 const util = require("./util.js");
 
+const loader = require("./loader.js");
+
 function Game () {
+	this.clear();
+}
+
+Game.prototype.clear = function () {
 	this.player = new Player();
 	this.rooms = {};
 	this.adhocs = [];
-}
+};
+
+Game.prototype.load = function () {
+	this.player = new Player();
+	loader.create(this);
+	return this;
+};
+
+Game.prototype.restart = function () {
+	this.clear();
+	this.load();
+};
 
 Game.prototype.goto = function (id) {
 	this.player.goto(this.room(id));

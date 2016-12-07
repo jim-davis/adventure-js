@@ -223,8 +223,7 @@ function add_raccoon_fight(g) {
 }
 
 
-exports.create = () => {
-	var g = new Game();
+exports.create = (g) => {
 	add_rooms(g);
     add_streetcar_route(g);
 	add_arcs(g);

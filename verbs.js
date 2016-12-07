@@ -23,6 +23,11 @@ new Verb("drink", [c.LIQUID],
 			 game.speak("Gulp!");
 		 });
 
+new Verb("die", [c.INTRANSITIVE],
+		 function (game) {
+			 game.clear();
+			 game.load();
+		 });
 
 new Verb("drop", [c.ANY], 
 		 function (game, noun) {

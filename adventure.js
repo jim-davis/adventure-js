@@ -1,10 +1,10 @@
 var _ = require('lodash');
-const loader = require("./loader.js");
 const readline = require('readline');
 const repl = require('repl');
+const Game = require("./game.js").Game;
 
 function adventure() {
-	interaction_loop(loader.create());
+	interaction_loop(new Game().load());
 }
 
 function interaction_loop (game) {
