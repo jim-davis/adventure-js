@@ -56,5 +56,7 @@ Noun.prototype.execute = function (game, word) {
 	game.speak("Nothing special happens.");
 };
 
+Noun.prototype.tick = function (game) {
+};
 
 exports.Noun = Noun;

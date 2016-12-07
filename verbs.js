@@ -120,10 +120,11 @@ new Verb("throw", [c.ANY],
 			 }
 		 });
 
-new Verb("xyzzy", [c.INTRANSITIVE], nothing_special);
+new Verb("wait", [c.INTRANSITIVE], nothing_special);
 
 new Verb("wave", [c.ANY], nothing_special);
 		 
+new Verb("xyzzy", [c.INTRANSITIVE], nothing_special);
 
 new Motion("climb");
 new Motion("crawl");

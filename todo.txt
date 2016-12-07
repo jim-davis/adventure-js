@@ -2,7 +2,4 @@ story:
 token
 streetcar
 
-Active nouns.
-ticking
-
 Maybe add one-shot adhocs?

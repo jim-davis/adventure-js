@@ -100,6 +100,11 @@ Game.prototype.find_noun = function (np) {
 	return this.player.find_noun(np) || this.player.room.find_noun(np);
 };
 
+Game.prototype.tick = function () {
+	_.forEach(this.player.nouns_in_reach(), n => n.tick(this));
+};
+
+
 Game.prototype.do_noun_with_adhoc_verb = function (input)  {
 	var f =  _(this.player.nouns_in_reach())
 		.map(n => n.adhoc(input))
@@ -115,6 +120,7 @@ Game.prototype.interpret = function (input) {
 	// Try adhoc matches first
 	if (adhoc = _.find(this.adhocs, a => a.match(this,  input))) {
 		adhoc.execute(this, input);
+		this.tick();
 		return false;
 	}
 	
@@ -146,11 +152,13 @@ Game.prototype.interpret = function (input) {
 	// arc name, e.g. north
 	if (a = this.player.room.has_arc(word)) {
 		a.follow(this);
+		this.tick();
 		return false;
 	}
 	
 	// nouns with special verbs
 	if (this.do_noun_with_adhoc_verb(input)) {
+		this.tick();
 		return false;
 	}
 
@@ -165,6 +173,7 @@ Game.prototype.interpret = function (input) {
 				var arg = tokens[1];
 				if (a = this.player.room.has_arc(arg)) {
 					a.follow(this);
+					this.tick();
 				} else {
 					// make the error message meaningful
 					if (arc.isDirection(arg)) {
@@ -180,6 +189,7 @@ Game.prototype.interpret = function (input) {
 				// no arg.  So it better be intransitive
 				if  (verb.isIntransitive()) {
 					verb.execute(this);
+					this.tick();
 				} else {
 					this.speak(verb.word + " what?. Try again, say a little more");
 				}
@@ -193,6 +203,7 @@ Game.prototype.interpret = function (input) {
 					if ( verb.selects_for(noun)) {
 						// This might be a better place to put the adhoc verb
 						verb.execute(this, noun);
+						this.tick();
 					} else {
 						this.speak("You can't " + verb.word + " that");
 					} 

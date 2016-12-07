@@ -129,7 +129,7 @@ function add_arcs(g) {
 
 	[a,b] = g.add_arc_pair("couple of steps", "down", "back_porch", "patio");
 	a.follow = function (game) {
-		if (this.from.find("raccoon")) {
+		if (this.from.find_noun("raccoon")) {
 			game.speak("As you step towards the stairs, the raccoon rushes you.  Startled, you jump back!");
 		} else {
 			Arc.prototype.follow.call(this, game);
