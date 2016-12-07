@@ -5,7 +5,10 @@ function Dictionary() {
 }
 
 Dictionary.prototype.add_word = function (w) {
-	this.words[w.word] = w;
+	// only add words that have a non-empty spelling.
+	if (w.word) {
+		this.words[w.word] = w;
+	}
 }
 
 Dictionary.prototype.find = function (w) {
@@ -20,4 +23,4 @@ Dictionary.prototype.all = function () {
 
 exports.Dictionary = Dictionary;
 
-function foo(x) {  return _.map(Object.keys(x)) .filter(k=>x.hasOwnProperty(k)) .map(k=>x[k]);}
+

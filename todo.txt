@@ -3,3 +3,18 @@ token
 streetcar
 
 Maybe add one-shot adhocs?
+
+Better help
+Hint
+
+"die" should confirm.  And then print something
+
+when on streetcar, "leave" is a synonym for exit
+
+implement read book
+
+synonym for flashlight: light
+
+"take streetcar"
+
+At the last stop, "wait" should say something 

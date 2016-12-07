@@ -1,18 +1,22 @@
-var _ = require('lodash');
+const _ = require('lodash');
 const grammar = require ("./grammar.js");
 const dictionary = require ("./dictionary.js");
 const c = require("./categories.js");
 
 const Verbs = new dictionary.Dictionary();
 
+
+
+
 Verbs.categorized_for = function (cat) {
 	return _.filter(this.all(), v => v.selects_for_category(cat));
 };
 
-function Verb (word, categories, execute) {
+function Verb (word, categories, execute, hidden=false) {
 	this.word = word;
 	this.categories = categories;
 	this.execute = execute;
+	this.hidden = hidden;
 	Verbs.add_word(this);
 }
 
@@ -47,4 +51,5 @@ exports.Verb = Verb;
 
 exports.Verbs = Verbs;
 exports.Motion = Motion;
+
 

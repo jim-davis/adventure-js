@@ -1,5 +1,6 @@
-const verb = require("./verb.js");
+const _ = require('lodash');const verb = require("./verb.js");
 const c = require("./categories.js");
+const grammar = require ("./grammar.js");
 const util = require("./util.js");
 
 const Verb = verb.Verb;
@@ -9,6 +10,8 @@ const Verbs = verb.Verbs;
 function nothing_special (game) {
 	game.speak("Nothing special happens.");
 }
+
+
 
 new Verb("break", [c.BREAKABLE], nothing_special);
 
@@ -54,6 +57,22 @@ new Verb("extinguish", [c.LIGHTABLE],
 		 nothing_special);
 
 new Verb("fix", [c.BREAKABLE], nothing_special);
+
+new Verb("help", [c.INTRANSITIVE], 
+		 function (game) {
+			 game.speak("Tell me what to do in one or two word sentences.");
+			 game.speak("Some (but not all) the verbs I know are:\n" +
+						grammar.comma_separated_list(_.reject(Object.keys(Verbs.words),
+															  k => Verbs.find(k).hidden ||
+															  Verbs.find(k).execute == nothing_special)
+													 .sort()));
+		 });
+
+new Verb("hint", [c.INTRANSITIVE], 
+		 function (game) {
+			 game.speak("I don't know any hints right now.  But everything has a solution.");
+		 });
+		
 
 new Verb("invent", [c.INTRANSITIVE],
 		 function (game) {
@@ -124,12 +143,16 @@ new Verb("wait", [c.INTRANSITIVE], nothing_special);
 
 new Verb("wave", [c.ANY], nothing_special);
 		 
-new Verb("xyzzy", [c.INTRANSITIVE], nothing_special);
+new Verb("xyzzy", [c.INTRANSITIVE], nothing_special, true);
 
 new Motion("climb");
 new Motion("crawl");
 new Motion("go");
 new Motion("jump");
 new Motion("run");
-new Motion("skip");
 new Motion("walk");
+
+
+
+
+

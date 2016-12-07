@@ -57,7 +57,7 @@ function add_rooms(g) {
 				"at");
 
 	g.make_room("bloor@bathurst", "the corner of Bloor and Bathurst",
-				"the corner of Bloor and Bathurst, in front of Honest Eds department store", "on");
+				"the corner of Bloor and Bathurst, in front of Honest Eds department store.  (This is the end for now) ", "on");
 
 	return g;
 }
